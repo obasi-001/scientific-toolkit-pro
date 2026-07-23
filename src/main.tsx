@@ -22,6 +22,7 @@ import "./styles/language.css";
 import "./styles/history.css";
 import "./styles/settings.css";
 import "./styles/footer.css";
+import "./styles/dashboard.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>

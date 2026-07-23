@@ -1,9 +1,9 @@
 .sidebar {
-    width: 250px;
+    width: 260px;
     min-height: 100vh;
     background: var(--surface);
     box-shadow: var(--shadow);
-    padding: 30px;
+    padding: 25px;
 }
 
 .sidebar ul {
@@ -12,13 +12,18 @@
 }
 
 .sidebar li {
-    padding: 14px 0;
-    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    border-radius: 12px;
     cursor: pointer;
-    transition: .3s;
+    transition: var(--transition);
 }
 
 .sidebar li:hover {
-    color: var(--primary);
-    padding-left: 12px;
+    color: white;
+    background: var(--primary);
+    transform: translateX(5px);
 }

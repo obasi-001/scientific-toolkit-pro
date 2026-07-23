@@ -1,0 +1,12 @@
+.dashboard-card {
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  border-radius: 20px;
+  transition: 3s;
+  padding: 15px;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, .15);
+}
