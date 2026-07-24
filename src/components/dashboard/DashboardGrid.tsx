@@ -1,4 +1,5 @@
 import DashboardCard from "./DashboardCard";
+import Calculator from "../calculator/Calculator";
 
 import {
   FaCloudSun,
@@ -17,9 +18,7 @@ const DashboardGrid = () => {
           title="Calculator"
           icon={<FaCalculator />}
         >
-          <p className="mb-0">
-            Calculator widget coming soon.
-          </p>
+         <Calculator />
         </DashboardCard>
       </div>
       <div className="col-lg-4 col-md-6">
