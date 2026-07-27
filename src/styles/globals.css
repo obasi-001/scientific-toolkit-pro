@@ -16,3 +16,28 @@ font-family:
 sans-serif;
 transition:.3s;
 }
+
+   /* Calculator Display */
+
+.calculator-display{
+    background:#1d1d1d;
+    color:white;
+    min-height:180px;
+}
+
+.previous-expression{
+    min-height:35px;
+    font-size:1.2rem;
+    color:#9ca3af;
+    word-break:break-all;
+}
+
+.current-expression{
+    font-size:2.4rem;
+    font-weight:700;
+    word-break:break-all;
+}
+
+.badge{
+    font-size:.8rem;
+}

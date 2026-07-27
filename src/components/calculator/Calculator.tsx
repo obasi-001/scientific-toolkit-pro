@@ -1,88 +1,128 @@
 import { useState } from "react";
 import CalculatorDisplay from "./CalculatorDisplay";
 import CalculatorGrid from "./CalculatorGrid";
+import { calculate } from "../../utils/mathengine";
 
 const Calculator = () => {
-    const [previousValue] = useState("");
-    const [currentValue, setCurrentValue] = useState("0");
+  const [expression, setExpression] = useState("");
+  const [result, setResult] = useState("0");
 
-    const calculateExpression = (expression: string) => {
-        try {
-            const formattedExpression = expression
-                .replace(/×/g, "*")
-                .replace(/÷/g, "/");
+  const handleButtonClick = (value: string) => {
+    const operators = ["+", "-", "×", "÷"];
+    
 
-            return Function(`"use strict"; return (${formattedExpression})`)().toString();
-        } catch {
-            return "Error";
-        }
-    };
+    if (value === "AC") {
+      setExpression("");
+      setResult("0");
+      return;
+    }
 
-    const handleButtonClick = (value: string) => {
-        if (value === "AC") {
-            setCurrentValue("0");
-            return;
-        }
+    if (value === "DEL") {
+      setExpression((prev) => prev.slice(0, -1));
+      return;
+    }
 
-        if (value === "DEL") {
-            if (currentValue.length === 1) {
-                setCurrentValue("0");
-            } else {
-                setCurrentValue(currentValue.slice(0, -1));
-            }
-            return;
-        }
+    if (value === "=") {
+      setResult(calculate(expression));
+      return;
+    }
 
+    if (value === "%") {
+      const percentage = Number(expression) / 100;
+      setResult(percentage.toString());
+      return;
+    }
 
-        const operators = ["+", "-", "×", "÷"];
+    if (value === "±") {
+      if (expression.startsWith("-")) {
+        setExpression(expression.substring(1));
+      } else {
+        setExpression("-" + expression);
+      }
+      return;
+    }
 
-        if (value === ".") {
-            const operators = ["+", "-", "×", "÷"];
+    // Scientific functions (Expression Mode)
 
-            const lastNumber = currentValue
-                .split(new RegExp(`[${operators.join("\\")}]`))
-                .pop();
+    if (value === "sin") {
+      setExpression((prev) => prev + "sin(");
+      return;
+    }
 
-            if (lastNumber?.includes(".")) {
-                return;
-            }
-        }
+    if (value === "cos") {
+      setExpression((prev) => prev + "cos(");
+      return;
+    }
 
-        if (value === "=") {
-            setCurrentValue(
-                calculateExpression(currentValue)
-            );
-            return;
-        }
+    if (value === "tan") {
+      setExpression((prev) => prev + "tan(");
+      return;
+    }
 
-        if (operators.includes(value)) {
-            const lastCharacter = currentValue.slice(-1);
+    if (value === "log") {
+      setExpression((prev) => prev + "log(");
+      return;
+    }
 
-            if (operators.includes(lastCharacter)) {
-                return;
-            }
+    if (value === "ln") {
+      setExpression((prev) => prev + "ln(");
+      return;
+    }
 
-            setCurrentValue(currentValue + value);
-            return;
-        }
+    if (value === "√") {
+      setExpression((prev) => prev + "√(");
+      return;
+    }
 
-        if (currentValue === "0") {
-            setCurrentValue(value);
-        } else {
-            setCurrentValue(currentValue + value);
-        }
-    };
+    if (value === "π") {
+      setExpression((prev) => prev + "π");
+      return;
+    }
 
-    return (
-        <div className="calculator-container">
-            <CalculatorDisplay
-                previousValue={previousValue}
-                currentValue={currentValue}
-            />
+    if (value === "e") {
+      setExpression((prev) => prev + "e");
+      return;
+    }
 
-            <CalculatorGrid onButtonClick={handleButtonClick} />
-        </div>
-    );
+    if (value === "x²") {
+      setExpression((prev) => prev + "^2");
+      return;
+    }
+
+    if (operators.includes(value)) {
+      const lastCharacter = expression.slice(-1);
+
+      if (operators.includes(lastCharacter)) {
+        return;
+      }
+
+      setExpression(expression + value);
+      return;
+    }
+
+    if (value === ".") {
+      const lastNumber = expression
+        .split(new RegExp(`[${operators.join("\\")}]`))
+        .pop();
+
+      if (lastNumber?.includes(".")) {
+        return;
+      }
+    }
+
+    setExpression((prev) => prev + value);
+  };
+
+  return (
+    <div className="calculator-container">
+      <CalculatorDisplay
+        expression={expression}
+        result={result}
+      />
+
+      <CalculatorGrid onButtonClick={handleButtonClick} />
+    </div>
+  );
 };
 
 export default Calculator;

@@ -9,17 +9,51 @@ import {
     FaCog,
 } from "react-icons/fa";
 
+import { NavLink } from "react-router-dom";
+
 
 const Sidebar = () => {
     const menus = [
-        { icon: <FaHome />, label: "Dashboard" },
-        { icon: <FaCalculator />, label: "Calculator" },
-        { icon: <FaMoneyBillWave />, label: "Currency" },
-        { icon: <FaRulerCombined />, label: "Unit Converter" },
-        { icon: <FaCloudSun />, label: "Weather" },
-        { icon: <FaGlobe />, label: "Translator" },
-        { icon: <FaHistory />, label: "History" },
-        { icon: <FaCog />, label: "Settings" }
+        {
+            icon: <FaHome />,
+            label: "Dashboard",
+            path: "/dashboard",
+        },
+        {
+            icon: <FaCalculator />,
+            label: "Calculator",
+            path: "/calculator",
+        },
+        {
+            icon: <FaMoneyBillWave />,
+            label: "Currency",
+            path: "/currency",
+        },
+        {
+            icon: <FaRulerCombined />,
+            label: "Unit Converter",
+            path: "/unit-converter",
+        },
+        {
+            icon: <FaCloudSun />,
+            label: "Weather",
+            path: "/weather",
+        },
+        {
+            icon: <FaGlobe />,
+            label: "Translator",
+            path: "/translator",
+        },
+        {
+            icon: <FaHistory />,
+            label: "History",
+            path: "/history",
+        },
+        {
+            icon: <FaCog />,
+            label: "Settings",
+            path: "/settings",
+        },
     ];
 
     return (
@@ -27,8 +61,15 @@ const Sidebar = () => {
             <ul>
                 {menus.map((menu) => (
                     <li key={menu.label}>
-                        {menu.icon}
-                        <span>{menu.label}</span>
+                        <NavLink
+                            to={menu.path}
+                            className={({ isActive }) =>
+                                isActive ? "sidebar-link active" : "sidebar-link"
+                            }
+                        >
+                            {menu.icon}
+                            <span>{menu.label}</span>
+                        </NavLink>
                     </li>
                 ))}
             </ul>
