@@ -1,5 +1,4 @@
 import DashboardCard from "./DashboardCard";
-import Calculator from "../calculator/Calculator";
 
 import {
   FaCloudSun,
@@ -13,14 +12,7 @@ import {
 const DashboardGrid = () => {
   return (
     <div className="row g-4">
-      <div className="col-lg-4 col-md-6">
-        <DashboardCard
-          title="Calculator"
-          icon={<FaCalculator />}
-        >
-         <Calculator />
-        </DashboardCard>
-      </div>
+
       <div className="col-lg-4 col-md-6">
         <DashboardCard
           title="Weather"
@@ -31,7 +23,23 @@ const DashboardGrid = () => {
           </p>
         </DashboardCard>
       </div>
+      <div className="col-lg-4 col-md-6">
+        <DashboardCard
+          title="Calculator"
+          icon={<FaCalculator />}
+        >
+          <p className="mb-3">
+            Launch the professional scientific calculator.
+          </p>
 
+          <button
+            className="btn btn-primary w-100"
+            onClick={() => window.location.href = "/calculator"}
+          >
+            Open Calculator
+          </button>
+        </DashboardCard>
+      </div>
       <div className="col-lg-4 col-md-6">
         <DashboardCard
           title="Translator"

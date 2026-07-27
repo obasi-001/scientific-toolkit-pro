@@ -5,7 +5,7 @@ interface CalculatorGridProps {
 }
 
 const buttons = [
-  "AC", "(", ")", "DEL", "%",
+  "AC", "(", ")", "DEL", "±",
   "sin", "cos", "tan", "√", "x²",
   "7", "8", "9", "÷", "log",
   "4", "5", "6", "×", "ln",
