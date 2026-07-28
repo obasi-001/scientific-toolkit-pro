@@ -1,15 +1,17 @@
 import { useState } from "react";
 import CalculatorDisplay from "./CalculatorDisplay";
 import CalculatorGrid from "./CalculatorGrid";
-import { calculate } from "../../utils/mathengine";
+import { calculate } from "../../utils/mathEngine";
+import { useHistory } from "../../contexts/HistoryContext";
 
 const Calculator = () => {
   const [expression, setExpression] = useState("");
   const [result, setResult] = useState("0");
+  const { addHistory } = useHistory();
 
   const handleButtonClick = (value: string) => {
     const operators = ["+", "-", "×", "÷"];
-    
+
 
     if (value === "AC") {
       setExpression("");
@@ -23,7 +25,12 @@ const Calculator = () => {
     }
 
     if (value === "=") {
-      setResult(calculate(expression));
+      const answer = calculate(expression);
+
+      setResult(answer);
+
+      addHistory(expression, answer);
+
       return;
     }
 
@@ -88,7 +95,62 @@ const Calculator = () => {
       setExpression((prev) => prev + "^2");
       return;
     }
-
+    if (value === "x³") {
+      setExpression(prev => prev + "^3");
+      return;
+    }
+    if (value === "xʸ") {
+      setExpression(prev => prev + "^");
+      return;
+    }
+    if (value === "eˣ") {
+      setExpression(prev => prev + "exp(");
+      return;
+    }
+    if (value === "10ˣ") {
+      setExpression(prev => prev + "10^");
+      return;
+    }
+    if (value === "1/x") {
+      setExpression(prev => "1/(" + prev + ")");
+      return;
+    }
+    if (value === "²√x") {
+      setExpression(prev => prev + "sqrt(");
+      return;
+    }
+    if (value === "³√x") {
+      setExpression(prev => prev + "cbrt(");
+      return;
+    }
+    if (value === "ʸ√x") {
+      setExpression(prev => prev + "nthRoot(");
+      return;
+    }
+    if (value === "x!") {
+      setExpression(prev => prev + "!");
+      return;
+    }
+    if (value === "EE") {
+      setExpression(prev => prev + "e");
+      return;
+    }
+    if (value === "Rand") {
+      setResult(Math.random().toString());
+      return;
+    }
+    if (value === "sinh") {
+      setExpression(prev => prev + "sinh(");
+      return;
+    }
+    if (value === "cosh") {
+      setExpression(prev => prev + "cosh(");
+      return;
+    }
+    if (value === "tanh") {
+      setExpression(prev => prev + "tanh(");
+      return;
+    }
     if (operators.includes(value)) {
       const lastCharacter = expression.slice(-1);
 
@@ -118,6 +180,7 @@ const Calculator = () => {
       <CalculatorDisplay
         expression={expression}
         result={result}
+        onExpressionChange={setExpression}
       />
 
       <CalculatorGrid onButtonClick={handleButtonClick} />

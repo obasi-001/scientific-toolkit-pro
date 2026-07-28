@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+
 
 
 interface CalculatorDisplayProps {
@@ -32,9 +32,7 @@ const CalculatorDisplay = ({
         className="previous-expression form-control text-end border-0 shadow-none"
         value={expression}
         placeholder="Enter expression..."
-        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-          onExpressionChange(e.target.value)
-        }
+        onChange={(e) => onExpressionChange(e.target.value)}
       />
 
       <div className="current-expression text-end">

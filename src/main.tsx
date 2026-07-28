@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+import { HistoryProvider } from "./contexts/HistoryContext";
 import "./styles/variables.css";
 import "./styles/globals.css";
 import "./styles/layout.css";
@@ -26,6 +27,8 @@ import "./styles/dashboard.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
-        <App />
+        <HistoryProvider>
+            <App />
+        </HistoryProvider>
     </React.StrictMode>
 );
