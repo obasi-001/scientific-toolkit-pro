@@ -22,25 +22,39 @@
     font-weight: bold;
 }
 
-.calculator-grid {
+.scientific-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.main-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 12px;
 }
 
 .calculator-btn {
-    height: 55px;
-    border: none;
-    border-radius: 14px;
-    background: white;
-    font-size: 18px;
-    cursor: pointer;
-    transition: .25s;
-    box-shadow: 0 5px 15px rgba(0,0,0,.08);
+    height: 72px;
+    border-radius: 18px;
+    font-size: 1.1rem;
+    font-weight: 600;
 }
 
-.calculator-btn:hover {
-    background: var(--primary);
-    color: white;
+.scientific-grid .calculator-btn {
+    height: 58px;
+    font-size: 2rem;
+}
+
+.main-grid .calculator-btn {
+    height: 72px;
+    font-size: 1.2rem;
+}
+/* .calculator-btn:hover {
     transform: translateY(-3px);
 }
+
+.calculator-btn:active {
+    transform: scale(0.95);
+} */
