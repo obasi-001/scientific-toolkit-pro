@@ -1,24 +1,39 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode, useEffect } from "react";
 import type { HistoryItem } from "../types/history";
 
 interface HistoryContextType {
     history: HistoryItem[];
     addHistory: (expression: string, result: string) => void;
     clearHistory: () => void;
+    deleteHistory: (id: string) => void;
 }
 
 const HistoryContext = createContext<HistoryContextType | undefined>(undefined);
 
 export const HistoryProvider = ({ children }: { children: ReactNode }) => {
-    const [history, setHistory] = useState<HistoryItem[]>([]);
+    const [history, setHistory] = useState<HistoryItem[]>(() => {
+        const saved = localStorage.getItem("calculator-history");
 
-    const addHistory = (expression: string, result: string) => {
-        setHistory((prev) => [
+        return saved ? JSON.parse(saved) : [];
+    });
+    useEffect(() => {
+        localStorage.setItem(
+            "calculator-history",
+            JSON.stringify(history)
+        );
+    }, [history]);
+
+
+    const addHistory = (
+        expression: string,
+        result: string
+    ) => {
+        setHistory(prev => [
             {
-                id: Date.now(),
+                id: crypto.randomUUID(),
                 expression,
                 result,
-                date: new Date().toLocaleString(),
+                createdAt: new Date().toLocaleString(),
             },
             ...prev,
         ]);
@@ -28,12 +43,19 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
         setHistory([]);
     };
 
+    const deleteHistory = (id: string) => {
+        setHistory(prev =>
+            prev.filter(item => item.id !== id)
+        );
+    };
+
     return (
         <HistoryContext.Provider
             value={{
                 history,
                 addHistory,
                 clearHistory,
+                deleteHistory,
             }}
         >
             {children}

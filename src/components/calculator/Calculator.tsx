@@ -1,16 +1,63 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import CalculatorDisplay from "./CalculatorDisplay";
 import CalculatorGrid from "./CalculatorGrid";
 import { calculate } from "../../utils/mathEngine";
 import { useHistory } from "../../contexts/HistoryContext";
 
+
 const Calculator = () => {
   const [expression, setExpression] = useState("");
   const [result, setResult] = useState("0");
+  const [memory, setMemory] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const { addHistory } = useHistory();
+  const [isDegree, setIsDegree] = useState(true);
+  const [isSecond, setIsSecond] = useState(false);
+  const [justCalculated, setJustCalculated] = useState(false);
+
+  const insertText = (text: string) => {
+    if (!inputRef.current) {
+      setExpression(prev => prev + text);
+      return;
+    }
+
+    const start = inputRef.current.selectionStart ?? expression.length;
+    const end = inputRef.current.selectionEnd ?? expression.length;
+
+    const newExpression =
+      expression.slice(0, start) +
+      text +
+      expression.slice(end);
+
+    setExpression(newExpression);
+
+    requestAnimationFrame(() => {
+      inputRef.current?.focus();
+      inputRef.current?.setSelectionRange(
+        start + text.length,
+        start + text.length
+      );
+    });
+  };
 
   const handleButtonClick = (value: string) => {
     const operators = ["+", "-", "×", "÷"];
+
+    if (justCalculated) {
+      if (/^[0-9.]$/.test(value)) {
+        setExpression(value);
+        setResult("0");
+        setJustCalculated(false);
+        return;
+      }
+
+      if (operators.includes(value)) {
+        setExpression(result + value);
+        setJustCalculated(false);
+        return;
+      }
+    }
 
 
     if (value === "AC") {
@@ -23,13 +70,42 @@ const Calculator = () => {
       setExpression((prev) => prev.slice(0, -1));
       return;
     }
+    if (value === "MC") {
+      setMemory(0);
+      return;
+    }
+    if (value === "M+") {
+      const current = Number(result);
+
+      if (!isNaN(current)) {
+        setMemory((prev) => prev + current);
+      }
+      return;
+    }
+    if (value === "M-") {
+      const current = Number(result);
+      if (!isNaN(current)) {
+        setMemory((prev) => prev - current);
+      }
+      return;
+    }
+    if (value === "MR") {
+      setExpression((prev) => prev + memory.toString());
+      return;
+    }
 
     if (value === "=") {
-      const answer = calculate(expression);
+      let exp = expression;
+      const open = (exp.match(/\(/g) || []).length;
+      const close = (exp.match(/\)/g) || []).length;
 
+      if (open > close) {
+        exp += ")".repeat(open - close);
+      }
+      const answer = calculate(exp, isDegree);
       setResult(answer);
-
-      addHistory(expression, answer);
+      addHistory(exp, answer);
+      setJustCalculated(true);
 
       return;
     }
@@ -48,91 +124,99 @@ const Calculator = () => {
       }
       return;
     }
+    if (value === "Deg") {
+      setIsDegree((prev) => !prev);
+      return;
+    }
+    if (value === "2nd") {
+      setIsSecond((prev) => !prev);
+      return;
+    }
 
     // Scientific functions (Expression Mode)
 
     if (value === "sin") {
-      setExpression((prev) => prev + "sin(");
+      insertText("sin(");
       return;
     }
 
     if (value === "cos") {
-      setExpression((prev) => prev + "cos(");
+      insertText("cos(");
       return;
     }
 
     if (value === "tan") {
-      setExpression((prev) => prev + "tan(");
+      insertText("tan(");
       return;
     }
 
     if (value === "log") {
-      setExpression((prev) => prev + "log(");
+      insertText("log(");
       return;
     }
 
     if (value === "ln") {
-      setExpression((prev) => prev + "ln(");
+      insertText("ln(");
       return;
     }
 
     if (value === "√") {
-      setExpression((prev) => prev + "√(");
+      insertText("√(");
       return;
     }
 
     if (value === "π") {
-      setExpression((prev) => prev + "π");
+      insertText("π");
       return;
     }
 
     if (value === "e") {
-      setExpression((prev) => prev + "e");
+      insertText("e");
       return;
     }
 
     if (value === "x²") {
-      setExpression((prev) => prev + "^2");
+      insertText("^2");
       return;
     }
     if (value === "x³") {
-      setExpression(prev => prev + "^3");
+      insertText("^3");
       return;
     }
     if (value === "xʸ") {
-      setExpression(prev => prev + "^");
+      insertText("^");
       return;
     }
     if (value === "eˣ") {
-      setExpression(prev => prev + "exp(");
+      insertText("exp(");
       return;
     }
     if (value === "10ˣ") {
-      setExpression(prev => prev + "10^");
+      insertText("10^");
       return;
     }
     if (value === "1/x") {
-      setExpression(prev => "1/(" + prev + ")");
+      insertText(`1/(${expression})`);
       return;
     }
     if (value === "²√x") {
-      setExpression(prev => prev + "sqrt(");
+      insertText("sqrt(");
       return;
     }
     if (value === "³√x") {
-      setExpression(prev => prev + "cbrt(");
+      insertText("nthroot(");
       return;
     }
     if (value === "ʸ√x") {
-      setExpression(prev => prev + "nthRoot(");
+      insertText("nthRoot(,)");
       return;
     }
     if (value === "x!") {
-      setExpression(prev => prev + "!");
+      insertText("!");
       return;
     }
     if (value === "EE") {
-      setExpression(prev => prev + "e");
+      insertText("e");
       return;
     }
     if (value === "Rand") {
@@ -140,25 +224,46 @@ const Calculator = () => {
       return;
     }
     if (value === "sinh") {
-      setExpression(prev => prev + "sinh(");
+      insertText("sinh(");
       return;
     }
     if (value === "cosh") {
-      setExpression(prev => prev + "cosh(");
+      insertText("cosh(");
       return;
     }
     if (value === "tanh") {
-      setExpression(prev => prev + "tanh(");
+      insertText("tanh(");
       return;
     }
-    if (operators.includes(value)) {
-      const lastCharacter = expression.slice(-1);
+    if (value === "asin") {
+      insertText("asin(");
+      return;
+    }
+    if (value === "acos") {
+      insertText("acos(");
+      return;
+    }
+    if (value === "atan") {
+      insertText("atan(");
+      return;
+    }
+    if (value === "exp") {
+      insertText("exp(");
+      return;
+    }
 
-      if (operators.includes(lastCharacter)) {
-        return;
+    if (operators.includes(value)) {
+      if (justCalculated) {
+        setExpression(result + value);
+      } else {
+        const last = expression.slice(-1);
+
+        if (operators.includes(last)) return;
+
+        setExpression(expression + value);
       }
 
-      setExpression(expression + value);
+      setJustCalculated(false);
       return;
     }
 
@@ -172,7 +277,13 @@ const Calculator = () => {
       }
     }
 
-    setExpression((prev) => prev + value);
+    if (justCalculated) {
+      setExpression(value);
+    } else {
+      setExpression(prev => prev + value);
+    }
+
+    setJustCalculated(false);
   };
 
   return (
@@ -181,9 +292,12 @@ const Calculator = () => {
         expression={expression}
         result={result}
         onExpressionChange={setExpression}
+        mode={isDegree ? "DEG" : "RAD"}
+        inputRef={inputRef}
       />
 
-      <CalculatorGrid onButtonClick={handleButtonClick} />
+      <CalculatorGrid onButtonClick={handleButtonClick}
+        isSecond={isSecond} />
     </div>
   );
 };
