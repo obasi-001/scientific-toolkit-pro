@@ -1,16 +1,20 @@
-
+import type { RefObject } from "react";
 
 
 interface CalculatorDisplayProps {
   expression: string;
   result: string;
   onExpressionChange: (value: string) => void;
+  mode: string;
+  inputRef: RefObject<HTMLInputElement | null>;
 }
 
 const CalculatorDisplay = ({
   expression,
   result,
   onExpressionChange,
+  mode,
+  inputRef,
 }: CalculatorDisplayProps) => {
   return (
     <div className="calculator-display shadow rounded p-4 mb-4">
@@ -23,11 +27,12 @@ const CalculatorDisplay = ({
 
       <div className="d-flex justify-content-end mb-2">
         <span className="badge bg-primary">
-          DEG
+          {mode}
         </span>
       </div>
 
       <input
+        ref={inputRef}
         type="text"
         className="previous-expression form-control text-end border-0 shadow-none"
         value={expression}
