@@ -2,12 +2,14 @@ import type { RefObject } from "react";
 
 
 interface CalculatorDisplayProps {
-  expression: string;
-  result: string;
-  onExpressionChange: (value: string) => void;
-  mode: string;
-  inputRef: RefObject<HTMLInputElement | null>;
+  expression: string,
+  result: string,
+  onExpressionChange: (value: string) => void,
+  mode: "DEG" | "RAD",
+  inputRef: RefObject<HTMLInputElement | null>,
+  hasMemory?: boolean,
 }
+  
 
 const CalculatorDisplay = ({
   expression,
@@ -15,6 +17,7 @@ const CalculatorDisplay = ({
   onExpressionChange,
   mode,
   inputRef,
+  hasMemory
 }: CalculatorDisplayProps) => {
   return (
     <div className="calculator-display shadow rounded p-4 mb-4">
@@ -25,11 +28,19 @@ const CalculatorDisplay = ({
         </h4>
       </div>
 
-      <div className="d-flex justify-content-end mb-2">
-        <span className="badge bg-primary">
-          {mode}
+      <div className="d-flex justify-content-end gap-2 mb-2">
+
+    {hasMemory && (
+        <span className="badge bg-success">
+            M
         </span>
-      </div>
+    )}
+
+    <span className="badge bg-primary">
+        {mode}
+    </span>
+
+</div>
 
       <input
         ref={inputRef}
