@@ -6,9 +6,12 @@ interface HistoryContextType {
     addHistory: (expression: string, result: string) => void;
     clearHistory: () => void;
     deleteHistory: (id: string) => void;
+    selectedExpression: string;
+    setSelectedExpression: (expression: string) => void;
 }
 
 const HistoryContext = createContext<HistoryContextType | undefined>(undefined);
+
 
 export const HistoryProvider = ({ children }: { children: ReactNode }) => {
     const [history, setHistory] = useState<HistoryItem[]>(() => {
@@ -16,6 +19,8 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
 
         return saved ? JSON.parse(saved) : [];
     });
+
+    const [selectedExpression, setSelectedExpression] = useState("");
     useEffect(() => {
         localStorage.setItem(
             "calculator-history",
@@ -56,6 +61,8 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
                 addHistory,
                 clearHistory,
                 deleteHistory,
+                selectedExpression,
+                setSelectedExpression,
             }}
         >
             {children}

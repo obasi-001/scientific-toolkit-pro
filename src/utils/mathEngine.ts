@@ -47,6 +47,8 @@ export const calculate = (
                 .replace(/atan\((.*?)\)/g, "(atan($1) * 180 / pi)");
         }
 
+        
+
         const result = evaluate(exp);
 
         return result.toString();

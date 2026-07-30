@@ -1,0 +1,18 @@
+.history-card {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.history-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.history-card .btn-outline-danger {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.history-card:hover .btn-outline-danger {
+    opacity: 1;
+}
