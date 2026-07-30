@@ -15,16 +15,6 @@ const DashboardGrid = () => {
 
       <div className="col-lg-4 col-md-6">
         <DashboardCard
-          title="Weather"
-          icon={<FaCloudSun />}
-        >
-          <p className="mb-0">
-            Weather widget coming soon.
-          </p>
-        </DashboardCard>
-      </div>
-      <div className="col-lg-4 col-md-6">
-        <DashboardCard
           title="Calculator"
           icon={<FaCalculator />}
         >
@@ -40,17 +30,6 @@ const DashboardGrid = () => {
           </button>
         </DashboardCard>
       </div>
-      <div className="col-lg-4 col-md-6">
-        <DashboardCard
-          title="Translator"
-          icon={<FaGlobe />}
-        >
-          <p className="mb-0">
-            Language translator coming soon.
-          </p>
-        </DashboardCard>
-
-      </div>
 
       <div className="col-lg-4 col-md-6">
         <DashboardCard
@@ -60,6 +39,13 @@ const DashboardGrid = () => {
           <p className="mb-0">
             Currency converter coming soon.
           </p>
+
+          <button
+            className="btn btn-primary w-100"
+            onClick={() => window.location.href = "/currency"}
+          >
+            Open Currency Converter
+          </button>
         </DashboardCard>
 
       </div>
@@ -73,7 +59,51 @@ const DashboardGrid = () => {
           <p className="mb-0">
             Unit converter coming soon.
           </p>
+
+          <button
+            className="btn btn-primary w-100"
+            onClick={() => window.location.href = "/unit-converter"}
+          >
+            Open Unit Converter
+          </button>
         </DashboardCard>
+      </div>
+
+      <div className="col-lg-4 col-md-6">
+        <DashboardCard
+          title="Weather"
+          icon={<FaCloudSun />}
+        >
+          <p className="mb-0">
+            Weather widget coming soon.
+          </p>
+
+          <button
+            className="btn btn-primary w-100"
+            onClick={() => window.location.href = "/weather"}
+          >
+            Open Weather
+          </button>
+        </DashboardCard>
+      </div>
+      
+      <div className="col-lg-4 col-md-6">
+        <DashboardCard
+          title="Translator"
+          icon={<FaGlobe />}
+        >
+          <p className="mb-0">
+            Language translator coming soon.
+          </p>
+
+          <button
+            className="btn btn-primary w-100"
+            onClick={() => window.location.href = "/translator"}
+          >
+            Open Translator
+          </button>
+        </DashboardCard>
+
       </div>
 
       <div className="col-lg-4 col-md-6">
@@ -84,6 +114,13 @@ const DashboardGrid = () => {
           <p className="mb-0">
             Live clock coming soon.
           </p>
+
+          <button
+            className="btn btn-primary w-100"
+            onClick={() => window.location.href = "/clock"}
+          >
+            Open Clock
+          </button>
         </DashboardCard>
       </div>
     </div>

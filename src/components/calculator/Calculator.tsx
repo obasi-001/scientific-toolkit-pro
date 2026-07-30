@@ -72,10 +72,11 @@ const Calculator = () => {
     }
     if (value === "MC") {
       setMemory(0);
+      setJustCalculated(false);
       return;
     }
     if (value === "M+") {
-      const current = Number(result);
+      const current = Number(justCalculated ? result : expression);
 
       if (!isNaN(current)) {
         setMemory((prev) => prev + current);
@@ -90,7 +91,16 @@ const Calculator = () => {
       return;
     }
     if (value === "MR") {
-      setExpression((prev) => prev + memory.toString());
+      const mem = memory.toString();
+
+      if (justCalculated || expression === "") {
+        setExpression(mem);
+        setResult(mem);
+        setJustCalculated(false);
+      } else {
+        insertText(mem);
+      }
+
       return;
     }
 
@@ -184,7 +194,7 @@ const Calculator = () => {
       return;
     }
     if (value === "xʸ") {
-      insertText("^");
+      insertText("^(");
       return;
     }
     if (value === "eˣ") {
@@ -192,7 +202,7 @@ const Calculator = () => {
       return;
     }
     if (value === "10ˣ") {
-      insertText("10^");
+      insertText("10^(");
       return;
     }
     if (value === "1/x") {
@@ -204,11 +214,11 @@ const Calculator = () => {
       return;
     }
     if (value === "³√x") {
-      insertText("nthroot(");
+      insertText("nthRoot(");
       return;
     }
     if (value === "ʸ√x") {
-      insertText("nthRoot(,)");
+      insertText("nthRoot(");
       return;
     }
     if (value === "x!") {
@@ -220,7 +230,12 @@ const Calculator = () => {
       return;
     }
     if (value === "Rand") {
-      setResult(Math.random().toString());
+      const random = Math.random();
+
+      setExpression(random.toString());
+      setResult(random.toString());
+      setJustCalculated(true);
+
       return;
     }
     if (value === "sinh") {
@@ -294,6 +309,7 @@ const Calculator = () => {
         onExpressionChange={setExpression}
         mode={isDegree ? "DEG" : "RAD"}
         inputRef={inputRef}
+        hasMemory={memory !== 0}
       />
 
       <CalculatorGrid onButtonClick={handleButtonClick}

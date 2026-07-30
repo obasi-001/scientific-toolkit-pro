@@ -7,6 +7,7 @@ import {
     FaGlobe,
     FaHistory,
     FaCog,
+    FaClock,
 } from "react-icons/fa";
 
 import { NavLink } from "react-router-dom";
@@ -43,6 +44,11 @@ const Sidebar = () => {
             icon: <FaGlobe />,
             label: "Translator",
             path: "/translator",
+        },
+        {
+            icon: <FaClock />,
+            label: "Clock",
+            path: "/clock",
         },
         {
             icon: <FaHistory />,
