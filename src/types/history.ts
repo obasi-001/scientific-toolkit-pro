@@ -3,4 +3,5 @@ export interface HistoryItem {
     expression: string;
     result: string;
     createdAt: string;
+    deleteHistory?: (id: string) => void;
 }

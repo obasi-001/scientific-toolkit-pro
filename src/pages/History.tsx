@@ -1,8 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import HistoryCard from "../components/history/HistoryCard";
 import { useHistory } from "../contexts/HistoryContext";
 
 const History = () => {
-    const { history, clearHistory } = useHistory();
+
+    const navigate = useNavigate();
+
+    const { history,
+        clearHistory,
+        setSelectedExpression,
+        deleteHistory, } = useHistory();
 
     return (
         <div className="container py-4">
@@ -29,9 +36,15 @@ const History = () => {
                 history.map((item) => (
                     <HistoryCard
                         key={item.id}
+                        id={item.id}
                         expression={item.expression}
                         result={item.result}
-                        date={item.date}
+                        createdAt={item.createdAt}
+                        onReuse={(expression) => {
+                            setSelectedExpression(expression);
+                            navigate("/calculator");
+                        }}
+                        onDelete={deleteHistory}
                     />
                 ))
             )}

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import CalculatorDisplay from "./CalculatorDisplay";
 import CalculatorGrid from "./CalculatorGrid";
 import { calculate } from "../../utils/mathEngine";
@@ -11,7 +11,7 @@ const Calculator = () => {
   const [memory, setMemory] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { addHistory } = useHistory();
+  const { addHistory, selectedExpression, setSelectedExpression } = useHistory();
   const [isDegree, setIsDegree] = useState(true);
   const [isSecond, setIsSecond] = useState(false);
   const [justCalculated, setJustCalculated] = useState(false);
@@ -40,6 +40,18 @@ const Calculator = () => {
       );
     });
   };
+
+  useEffect(() => {
+    if (selectedExpression) {
+      setExpression(selectedExpression);
+      setResult("0");
+      setJustCalculated(false);
+
+      // Clear it so it doesn't reload every time
+      setSelectedExpression("");
+    }
+  }, [selectedExpression, setSelectedExpression]);
+  
 
   const handleButtonClick = (value: string) => {
     const operators = ["+", "-", "×", "÷"];
