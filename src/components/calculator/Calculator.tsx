@@ -51,10 +51,75 @@ const Calculator = () => {
       setSelectedExpression("");
     }
   }, [selectedExpression, setSelectedExpression]);
-  
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const key = e.key;
+
+      // Numbers
+      // Numbers
+      if (/^[0-9]$/.test(key)) {
+        e.preventDefault();
+        handleButtonClick(key);
+        return;
+      }
+
+      // Decimal
+      // Decimal
+      if (key === ".") {
+        e.preventDefault();
+        handleButtonClick(".");
+        return;
+      }
+      // Operators
+      if (key === "+") handleButtonClick("+");
+      if (key === "-") handleButtonClick("-");
+      if (key === "*") handleButtonClick("×");
+      if (key === "/") {
+        e.preventDefault();
+        handleButtonClick("÷");
+      }
+
+      // Brackets
+      if (key === "(") handleButtonClick("(");
+      if (key === ")") handleButtonClick(")");
+
+      // Calculate
+      if (key === "Enter") {
+        e.preventDefault();
+        handleButtonClick("=");
+      }
+
+      // Delete last
+      if (key === "Backspace") {
+        e.preventDefault();
+        handleButtonClick("DEL");
+      }
+
+      // Clear
+      if (key === "Escape") {
+        handleButtonClick("AC");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [expression, result]);
+
 
   const handleButtonClick = (value: string) => {
     const operators = ["+", "-", "×", "÷"];
+
+    if (
+      expression.includes("?") &&
+      /^[0-9.]$/.test(value)
+    ) {
+      setExpression(prev => prev.replace("?", value));
+      return;
+    }
 
     if (justCalculated) {
       if (/^[0-9.]$/.test(value)) {
@@ -87,21 +152,40 @@ const Calculator = () => {
       setJustCalculated(false);
       return;
     }
+
     if (value === "M+") {
-      const current = Number(justCalculated ? result : expression);
+      const currentExpression = justCalculated
+        ? result
+        : expression;
+
+      if (!currentExpression) return;
+
+      const calculated = calculate(currentExpression, isDegree);
+      const current = Number(calculated);
 
       if (!isNaN(current)) {
-        setMemory((prev) => prev + current);
+        setMemory(prev => prev + current);
       }
+
       return;
     }
+
     if (value === "M-") {
-      const current = Number(result);
+      const currentExpression = justCalculated
+        ? result
+        : expression;
+
+      if (!currentExpression) return;
+
+      const calculated = calculate(currentExpression, isDegree);
+      const current = Number(calculated);
+
       if (!isNaN(current)) {
-        setMemory((prev) => prev - current);
+        setMemory(prev => prev - current);
       }
       return;
     }
+
     if (value === "MR") {
       const mem = memory.toString();
 
@@ -118,32 +202,79 @@ const Calculator = () => {
 
     if (value === "=") {
       let exp = expression;
+
       const open = (exp.match(/\(/g) || []).length;
       const close = (exp.match(/\)/g) || []).length;
 
       if (open > close) {
         exp += ")".repeat(open - close);
       }
+
       const answer = calculate(exp, isDegree);
+
+      setExpression(exp);
       setResult(answer);
+
       addHistory(exp, answer);
+
       setJustCalculated(true);
 
       return;
     }
 
     if (value === "%") {
-      const percentage = Number(expression) / 100;
-      setResult(percentage.toString());
+      if (!expression) return;
+
+      const lastCharacter = expression.slice(-1);
+
+      // Don't allow % after an operator or another %
+      if (operators.includes(lastCharacter) || lastCharacter === "%") {
+        return;
+      }
+
+      setExpression(prev => prev + "%");
+      setJustCalculated(false);
+
       return;
     }
 
     if (value === "±") {
-      if (expression.startsWith("-")) {
-        setExpression(expression.substring(1));
-      } else {
-        setExpression("-" + expression);
+      if (!expression) return;
+
+      // If the whole expression is a single number
+      if (/^-?\d+(?:\.\d+)?$/.test(expression)) {
+        setExpression(
+          expression.startsWith("-")
+            ? expression.slice(1)
+            : `-${expression}`
+        );
+
+        setJustCalculated(false);
+        return;
       }
+
+      // Toggle the last number in a larger expression
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.lastIndexOf(number);
+
+      const before = expression.slice(0, start);
+
+      // If the number is already negative, remove the minus
+      if (before.endsWith("-")) {
+        setExpression(
+          before.slice(0, -1) + number
+        );
+      } else {
+        setExpression(
+          before + `(-${number})`
+        );
+      }
+
+      setJustCalculated(false);
       return;
     }
     if (value === "Deg") {
@@ -158,32 +289,118 @@ const Calculator = () => {
     // Scientific functions (Expression Mode)
 
     if (value === "sin") {
-      insertText("sin(");
+      if (!expression) {
+        setExpression("sin(");
+        setJustCalculated(false);
+        return;
+      }
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}sin(${number})`);
+      setJustCalculated(false);
       return;
     }
 
     if (value === "cos") {
-      insertText("cos(");
+      if (!expression) {
+        setExpression("cos(");
+        setJustCalculated(false);
+        return;
+      }
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}cos(${number})`);
+      setJustCalculated(false);
       return;
     }
 
     if (value === "tan") {
-      insertText("tan(");
+      if (!expression) {
+        setExpression("tan(");
+        setJustCalculated(false);
+        return;
+      }
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}tan(${number})`);
+      setJustCalculated(false);
       return;
     }
 
     if (value === "log") {
-      insertText("log(");
+      if (!expression) {
+        setExpression("log(");
+        setJustCalculated(false);
+        return;
+      }
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}log(${number})`);
+      setJustCalculated(false);
+
       return;
     }
 
     if (value === "ln") {
-      insertText("ln(");
+      if (!expression) {
+        setExpression("ln(");
+        setJustCalculated(false);
+        return;
+      }
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}ln(${number})`);
+      setJustCalculated(false);
       return;
     }
 
     if (value === "√") {
-      insertText("√(");
+      if (!expression) {
+        setExpression("√(");
+        setJustCalculated(false);
+        return;
+      }
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}√(${number})`);
+      setJustCalculated(false);
       return;
     }
 
@@ -198,84 +415,328 @@ const Calculator = () => {
     }
 
     if (value === "x²") {
-      insertText("^2");
+      if (!expression) return;
+
+      // Find the last number
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}${number}²`);
+      setJustCalculated(false);
+
       return;
     }
+
     if (value === "x³") {
-      insertText("^3");
+      if (!expression) return;
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}${number}³`);
+      setJustCalculated(false);
       return;
     }
+
     if (value === "xʸ") {
-      insertText("^(");
+      if (!expression) return;
+
+      if (expression.endsWith("^")) return;
+
+      setExpression(`${expression}^`);
+      setJustCalculated(false);
+
       return;
     }
+
     if (value === "eˣ") {
-      insertText("exp(");
+      if (!expression) return;
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}e^${number}`);
+      setJustCalculated(false);
+
       return;
     }
     if (value === "10ˣ") {
       insertText("10^(");
       return;
     }
+
     if (value === "1/x") {
-      insertText(`1/(${expression})`);
+      if (!expression) return;
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}1/(${number})`);
+      setJustCalculated(false);
+
       return;
     }
-    if (value === "²√x") {
-      insertText("sqrt(");
-      return;
-    }
+
+    // if (value === "²√x") {
+    //   if (!expression) return;
+
+    //   const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+    //   if (!match) return;
+
+    //   const number = match[1];
+    //   const start = expression.length - number.length;
+    //   const before = expression.slice(0, start);
+
+    //   setExpression(`${before}√${number}`);
+    //   setJustCalculated(false);
+
+    //   return;
+    // }
+
     if (value === "³√x") {
-      insertText("nthRoot(");
+      if (!expression) return;
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}∛${number}`);
+      setJustCalculated(false);
+
       return;
     }
+
     if (value === "ʸ√x") {
-      insertText("nthRoot(");
+      if (expression.trim() === "") {
+        setExpression("nthRoot(,)");
+      } else {
+        setExpression(`nthRoot(${expression},?)`);
+      }
+
+      requestAnimationFrame(() => {
+        if (!inputRef.current) return;
+
+        // Cursor just before the closing parenthesis
+        const cursor = `nthRoot(${expression},`.length;
+
+        inputRef.current.focus();
+        inputRef.current.setSelectionRange(cursor, cursor);
+      });
+
       return;
     }
+
     if (value === "x!") {
-      insertText("!");
+      if (!expression) return;
+
+      // Only apply factorial to the last number
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = match[1];
+
+      // Factorial is only valid for whole numbers
+      if (number.includes(".")) return;
+
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}${number}!`);
+      setJustCalculated(false);
+
       return;
     }
+
     if (value === "EE") {
-      insertText("e");
+      if (!expression) return;
+
+      if (/[eE][+-]?$/.test(expression)) return;
+
+      setExpression(prev => `${prev}e`);
+      setJustCalculated(false);
+
       return;
     }
+
     if (value === "Rand") {
       const random = Math.random();
 
       setExpression(random.toString());
-      setResult(random.toString());
-      setJustCalculated(true);
+      setResult("0");
+      setJustCalculated(false);
 
       return;
     }
+
     if (value === "sinh") {
-      insertText("sinh(");
+      if (!expression) {
+        setExpression("sinh(");
+        setJustCalculated(false);
+        return;
+      }
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}sinh(${number})`);
+      setJustCalculated(false);
+
       return;
     }
+
     if (value === "cosh") {
-      insertText("cosh(");
+      if (!expression) {
+        setExpression("cosh(");
+        setJustCalculated(false);
+        return;
+      }
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}cosh(${number})`);
+      setJustCalculated(false);
+
       return;
     }
+
     if (value === "tanh") {
-      insertText("tanh(");
+      if (!expression) {
+        setExpression("tanh(");
+        setJustCalculated(false);
+        return;
+      }
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}tanh(${number})`);
+      setJustCalculated(false);
+
       return;
     }
+
     if (value === "asin") {
-      insertText("asin(");
+      if (!expression) {
+        setExpression("asin(");
+        setJustCalculated(false);
+        return;
+      }
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}asin(${number})`);
+      setJustCalculated(false);
+
       return;
     }
+
     if (value === "acos") {
-      insertText("acos(");
+      if (!expression) {
+        setExpression("acos(");
+        setJustCalculated(false);
+        return;
+      }
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}acos(${number})`);
+      setJustCalculated(false);
+
       return;
     }
+
     if (value === "atan") {
-      insertText("atan(");
+      if (!expression) {
+        setExpression("atan(");
+        setJustCalculated(false);
+        return;
+      }
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}atan(${number})`);
+      setJustCalculated(false);
+
       return;
     }
+
     if (value === "exp") {
-      insertText("exp(");
+      if (!expression) {
+        setExpression("exp(");
+        setJustCalculated(false);
+        return;
+      }
+
+      const match = expression.match(/(\d+(?:\.\d+)?)$/);
+
+      if (!match) return;
+
+      const number = match[1];
+      const start = expression.length - number.length;
+      const before = expression.slice(0, start);
+
+      setExpression(`${before}exp(${number})`);
+      setJustCalculated(false);
+
       return;
     }
 

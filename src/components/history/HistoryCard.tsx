@@ -1,6 +1,5 @@
 import "../../styles/History.css";
 
-
 interface HistoryCardProps {
   id: string;
   expression: string;
@@ -9,6 +8,8 @@ interface HistoryCardProps {
   onReuse: (expression: string) => void;
   onDelete: (id: string) => void;
 }
+import { useState } from "react";
+
 
 const HistoryCard = ({
   id,
@@ -18,6 +19,8 @@ const HistoryCard = ({
   onReuse,
   onDelete
 }: HistoryCardProps) => {
+
+  const [copied, setCopied] = useState(false);
   return (
     <div
       className="card shadow-sm mb-3 history-card"
@@ -59,11 +62,17 @@ const HistoryCard = ({
             className="btn btn-sm btn-outline-primary"
             onClick={(e) => {
               e.stopPropagation();
+
               navigator.clipboard.writeText(result);
+
+              setCopied(true);
+
+              setTimeout(() => {
+                setCopied(false);
+              }, 1500);
             }}
-            title="Copy Result"
           >
-            📋
+            {copied ? "✅" : "📋"}
           </button>
 
         </div>
