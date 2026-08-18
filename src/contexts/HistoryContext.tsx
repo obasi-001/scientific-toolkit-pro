@@ -15,9 +15,13 @@ const HistoryContext = createContext<HistoryContextType | undefined>(undefined);
 
 export const HistoryProvider = ({ children }: { children: ReactNode }) => {
     const [history, setHistory] = useState<HistoryItem[]>(() => {
-        const saved = localStorage.getItem("calculator-history");
+        try {
+            const saved = localStorage.getItem("calculator-history");
 
-        return saved ? JSON.parse(saved) : [];
+            return saved ? JSON.parse(saved) : [];
+        } catch {
+            return [];
+        }
     });
 
     const [selectedExpression, setSelectedExpression] = useState("");
