@@ -1,4 +1,5 @@
 import DashboardCard from "./DashboardCard";
+import { useNavigate } from "react-router-dom";
 
 import {
   FaCloudSun,
@@ -10,6 +11,8 @@ import {
 } from "react-icons/fa";
 
 const DashboardGrid = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="row g-4">
 
@@ -24,7 +27,7 @@ const DashboardGrid = () => {
 
           <button
             className="btn btn-primary w-100"
-            onClick={() => window.location.href = "/calculator"}
+            onClick={() => navigate("/calculator")}
           >
             Open Calculator
           </button>
@@ -42,7 +45,7 @@ const DashboardGrid = () => {
 
           <button
             className="btn btn-primary w-100"
-            onClick={() => window.location.href = "/currency"}
+            onClick={() => navigate("/currency")}
           >
             Open Currency Converter
           </button>
@@ -62,7 +65,7 @@ const DashboardGrid = () => {
 
           <button
             className="btn btn-primary w-100"
-            onClick={() => window.location.href = "/unit-converter"}
+            onClick={() => navigate("/unit-converter")}
           >
             Open Unit Converter
           </button>
@@ -80,7 +83,7 @@ const DashboardGrid = () => {
 
           <button
             className="btn btn-primary w-100"
-            onClick={() => window.location.href = "/weather"}
+            onClick={() => navigate("/weather")}
           >
             Open Weather
           </button>
@@ -98,7 +101,7 @@ const DashboardGrid = () => {
 
           <button
             className="btn btn-primary w-100"
-            onClick={() => window.location.href = "/translator"}
+            onClick={() => navigate("/translator")}
           >
             Open Translator
           </button>
@@ -117,7 +120,7 @@ const DashboardGrid = () => {
 
           <button
             className="btn btn-primary w-100"
-            onClick={() => window.location.href = "/clock"}
+            onClick={() => navigate("/clock")}
           >
             Open Clock
           </button>
