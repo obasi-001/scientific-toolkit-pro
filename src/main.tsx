@@ -6,6 +6,8 @@ import App from "./App";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { PreferencesProvider } from "./contexts/PreferencesContext";
 
 import { HistoryProvider } from "./contexts/HistoryContext";
 import "./styles/variables.css";
@@ -27,8 +29,12 @@ import "./styles/dashboard.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
-        <HistoryProvider>
-            <App />
-        </HistoryProvider>
+        <ThemeProvider>
+            <PreferencesProvider>
+                <HistoryProvider>
+                    <App />
+                </HistoryProvider>
+            </PreferencesProvider>
+        </ThemeProvider>
     </React.StrictMode>
 );

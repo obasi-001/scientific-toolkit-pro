@@ -12,8 +12,12 @@ import {
 
 import { NavLink } from "react-router-dom";
 
+interface SidebarProps {
+  isOpen: boolean;
+}
 
-const Sidebar = () => {
+
+const Sidebar = ({ isOpen }: SidebarProps) => {
     const menus = [
         {
             icon: <FaHome />,
@@ -63,7 +67,7 @@ const Sidebar = () => {
     ];
 
     return (
-        <aside className="sidebar">
+        <aside className={`sidebar ${isOpen ? "sidebar-open" : "sidebar-closed"}`}>
             <ul>
                 {menus.map((menu) => (
                     <li key={menu.label}>

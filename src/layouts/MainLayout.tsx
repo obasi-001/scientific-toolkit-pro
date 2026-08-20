@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Navbar from "../components/navbar/Navbar";
 import Sidebar from "../components/sidebar/Sidebar";
 
@@ -7,12 +7,21 @@ interface MainLayoutProps {
 }
 
 const MainLayout = ({ children }: MainLayoutProps) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const handleToggleSidebar = () => {
+    setIsSidebarOpen((previous) => !previous);
+  };
+
   return (
     <div className="app">
-      <Navbar />
+      <Navbar
+        isSidebarOpen={isSidebarOpen}
+        onToggleSidebar={handleToggleSidebar}
+      />
 
       <div className="main-layout">
-        <Sidebar />
+        <Sidebar isOpen={isSidebarOpen} />
 
         <main className="dashboard">
           {children}
