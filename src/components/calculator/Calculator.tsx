@@ -3,6 +3,7 @@ import CalculatorDisplay from "./CalculatorDisplay";
 import CalculatorGrid from "./CalculatorGrid";
 import { calculate } from "../../utils/mathEngine";
 import { useHistory } from "../../contexts/HistoryContext";
+import { usePreferences } from "../../contexts/PreferencesContext";
 
 
 const Calculator = () => {
@@ -12,7 +13,8 @@ const Calculator = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { addHistory, selectedExpression, setSelectedExpression } = useHistory();
-  const [isDegree, setIsDegree] = useState(true);
+  const { preferences, setAngleMode } = usePreferences();
+  // const [isDegree, setIsDegree] = useState(true);
   const [isSecond, setIsSecond] = useState(false);
   const [justCalculated, setJustCalculated] = useState(false);
 
@@ -160,7 +162,11 @@ const Calculator = () => {
 
       if (!currentExpression) return;
 
-      const calculated = calculate(currentExpression, isDegree);
+      // const calculated = calculate(currentExpression, isDegree);
+      const calculated = calculate(
+        currentExpression,
+        preferences.angleMode === "DEG"
+      );
       const current = Number(calculated);
 
       if (!isNaN(current)) {
@@ -177,7 +183,11 @@ const Calculator = () => {
 
       if (!currentExpression) return;
 
-      const calculated = calculate(currentExpression, isDegree);
+      // const calculated = calculate(currentExpression, isDegree);
+      const calculated = calculate(
+        currentExpression,
+        preferences.angleMode === "DEG"
+      );
       const current = Number(calculated);
 
       if (!isNaN(current)) {
@@ -210,7 +220,11 @@ const Calculator = () => {
         exp += ")".repeat(open - close);
       }
 
-      const answer = calculate(exp, isDegree);
+      // const answer = calculate(exp, isDegree);
+      const answer = calculate(
+        exp,
+        preferences.angleMode === "DEG"
+      );
 
       setExpression(exp);
       setResult(answer);
@@ -277,8 +291,16 @@ const Calculator = () => {
       setJustCalculated(false);
       return;
     }
+    // if (value === "Deg") {
+    //   setIsDegree((prev) => !prev);
+    //   return;
+    // }
     if (value === "Deg") {
-      setIsDegree((prev) => !prev);
+      setAngleMode(
+        preferences.angleMode === "DEG"
+          ? "RAD"
+          : "DEG"
+      );
       return;
     }
     if (value === "2nd") {
@@ -780,7 +802,7 @@ const Calculator = () => {
         expression={expression}
         result={result}
         onExpressionChange={setExpression}
-        mode={isDegree ? "DEG" : "RAD"}
+        mode={preferences.angleMode}
         inputRef={inputRef}
         hasMemory={memory !== 0}
       />
