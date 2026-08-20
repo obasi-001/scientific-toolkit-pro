@@ -1,21 +1,18 @@
 import { useState } from "react";
 import ClockGrid from "../components/clock/ClockGrid";
 import useClock from "../hooks/useClock";
+import { usePreferences } from "../contexts/PreferencesContext";
 
 const Clock = () => {
   const currentTime = useClock();
 
-  const [use24Hour, setUse24Hour] = useState(false);
-  const [showSeconds, setShowSeconds] = useState(true);
   const [timezone, setTimezone] = useState("Africa/Lagos");
 
-  const handleToggleFormat = () => {
-    setUse24Hour((previous) => !previous);
-  };
-
-  const handleToggleSeconds = () => {
-    setShowSeconds((previous) => !previous);
-  };
+  const {
+    preferences,
+    setUse24Hour,
+    setShowSeconds,
+  } = usePreferences();
 
   return (
     <div className="container-fluid">
@@ -32,10 +29,14 @@ const Clock = () => {
 
       <ClockGrid
         currentTime={currentTime}
-        use24Hour={use24Hour}
-        showSeconds={showSeconds}
-        onToggleFormat={handleToggleFormat}
-        onToggleSeconds={handleToggleSeconds}
+        use24Hour={preferences.use24Hour}
+        showSeconds={preferences.showSeconds}
+        onToggleFormat={() =>
+          setUse24Hour(!preferences.use24Hour)
+        }
+        onToggleSeconds={() =>
+          setShowSeconds(!preferences.showSeconds)
+        }
         timezone={timezone}
         onTimezoneChange={setTimezone}
       />

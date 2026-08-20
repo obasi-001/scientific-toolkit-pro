@@ -19,6 +19,7 @@ interface PreferencesContextType {
   setUse24Hour: (value: boolean) => void;
   setShowSeconds: (value: boolean) => void;
   setAngleMode: (value: AngleMode) => void;
+  resetPreferences: () => void;
 }
 
 const PreferencesContext = createContext<
@@ -38,6 +39,11 @@ interface PreferencesProviderProps {
 export const PreferencesProvider = ({
   children,
 }: PreferencesProviderProps) => {
+
+  const resetPreferences = () => {
+    setPreferences(defaultPreferences);
+  };
+  
   const [preferences, setPreferences] =
     useState<Preferences>(() => {
       const saved = localStorage.getItem(
@@ -93,6 +99,7 @@ export const PreferencesProvider = ({
         setUse24Hour,
         setShowSeconds,
         setAngleMode,
+        resetPreferences,
       }}
     >
       {children}

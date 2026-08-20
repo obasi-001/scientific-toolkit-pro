@@ -34,7 +34,10 @@ const ClockGrid = ({
 
                     <select
                         className="form-select"
-                        style={{ maxWidth: "280px", minWidth: "200px" }}
+                        style={{
+                            maxWidth: "280px",
+                            minWidth: "200px",
+                        }}
                         value={timezone}
                         onChange={(e) =>
                             onTimezoneChange(e.target.value)
@@ -47,6 +50,7 @@ const ClockGrid = ({
                         <option value="Europe/London">
                             London
                         </option>
+
                         <option value="Europe/Madrid">
                             Spain
                         </option>
@@ -54,6 +58,7 @@ const ClockGrid = ({
                         <option value="America/New_York">
                             New York
                         </option>
+
                         <option value="America/Washington">
                             Washington D.C.
                         </option>
@@ -74,6 +79,14 @@ const ClockGrid = ({
                             Dubai
                         </option>
 
+                        <option value="Asia/Kolkata">
+                            India
+                        </option>
+
+                        <option value="Asia/Shanghai">
+                            Shanghai
+                        </option>
+
                         <option value="Africa/Johannesburg">
                             Johannesburg
                         </option>
@@ -88,14 +101,6 @@ const ClockGrid = ({
 
                         <option value="Europe/Berlin">
                             Berlin
-                        </option>
-
-                        <option value="Asia/Shanghai">
-                            Shanghai
-                        </option>
-
-                        <option value="Asia/Kolkata">
-                            India
                         </option>
 
                         <option value="Asia/Tokyo">
