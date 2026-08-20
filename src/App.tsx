@@ -8,6 +8,7 @@ import UnitConverter from "./pages/UnitConverter";
 import Weather from "./pages/Weather";
 import Translator from "./pages/Translator";
 import History from "./pages/History";
+import Clock from "./pages/Clock";
 import Settings from "./pages/Settings";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
                     />
                     <Route path="/history" element={<History />} />
                     <Route path="/settings" element={<Settings />} />
+                    <Route path="/clock" element={<Clock />} />
                 </Routes>
             </MainLayout>
         </BrowserRouter>
