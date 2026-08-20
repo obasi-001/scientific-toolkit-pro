@@ -18,3 +18,57 @@
     --text:#f8fafc;
     --border:#334155;
 }
+
+body {
+    background: var(--background);
+    color: var(--text);
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+.app {
+    min-height: 100vh;
+    background: var(--background);
+    color: var(--text);
+}
+
+.navbar {
+    background: var(--surface) !important;
+    color: var(--text);
+    border-color: var(--border);
+}
+
+.sidebar {
+    background: var(--surface);
+    color: var(--text);
+}
+
+.sidebar-link {
+    color: var(--text);
+}
+
+.dashboard {
+    background: var(--background);
+    color: var(--text);
+}
+
+.dashboard-card,
+.card {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+.dashboard-card p,
+.card p {
+    color: var(--text);
+}
+
+.text-muted {
+    color: color-mix(
+        in srgb,
+        var(--text) 65%,
+        transparent
+    ) !important;
+}
