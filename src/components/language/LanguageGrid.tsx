@@ -8,7 +8,6 @@ interface LanguageGridProps {
     text: string;
     translatedText: string;
     loading: boolean;
-    copied: boolean;
 
     onSourceLanguageChange: (value: string) => void;
     onTargetLanguageChange: (value: string) => void;
@@ -34,7 +33,6 @@ const LanguageGrid = ({
     onSwap,
     onClear,
     onCopy,
-    copied,
 }: LanguageGridProps) => {
     return (
         <div className="row g-4">
@@ -53,7 +51,6 @@ const LanguageGrid = ({
                     onSwap={onSwap}
                     onClear={onClear}
                     onCopy={onCopy}
-                    copied={copied}
                 />
             </div>
         </div>

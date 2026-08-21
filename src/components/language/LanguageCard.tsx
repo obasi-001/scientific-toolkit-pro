@@ -7,7 +7,6 @@ interface LanguageCardProps {
     text: string;
     translatedText: string;
     loading: boolean;
-    copied: boolean;
 
     onSourceLanguageChange: (value: string) => void;
     onTargetLanguageChange: (value: string) => void;
@@ -26,7 +25,6 @@ const LanguageCard = ({
     text,
     translatedText,
     loading,
-    copied,
     onSourceLanguageChange,
     onTargetLanguageChange,
     onTextChange,
@@ -142,19 +140,18 @@ const LanguageCard = ({
                         onClick={onTranslate}
                         disabled={loading || !text.trim()}
                     >
-                        {loading ? "Translating..." : "Translate"}
+                        {loading
+                            ? "Translating..."
+                            : "Translate"}
                     </button>
 
                     <button
                         type="button"
-                        className={`btn ${copied
-                                ? "btn-success"
-                                : "btn-outline-secondary"
-                            }`}
+                        className="btn btn-outline-secondary"
                         onClick={onCopy}
                         disabled={!translatedText}
                     >
-                        {copied ? "✓ Copied!" : "Copy"}
+                        Copy
                     </button>
 
                     <button
