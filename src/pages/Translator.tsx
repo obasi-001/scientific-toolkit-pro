@@ -2,8 +2,11 @@ import { useState } from "react";
 import LanguageGrid from "../components/language/LanguageGrid";
 import { LANGUAGES } from "../components/constants/languages";
 import { translateText } from "../services/languageApi";
+import { useToast } from "../contexts/ToastContext";
+
 
 const Translator = () => {
+    const { showToast } = useToast();
     const [sourceLanguage, setSourceLanguage] = useState("en-GB");
     const [targetLanguage, setTargetLanguage] = useState("es-ES");
 
@@ -12,7 +15,7 @@ const Translator = () => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const [copied, setCopied] = useState(false);
+    // const [copied, setCopied] = useState(false);
 
     const handleTranslate = async () => {
         if (!text.trim()) {
@@ -58,7 +61,7 @@ const Translator = () => {
         setText("");
         setTranslatedText("");
         setError("");
-        setCopied(false);
+        // setCopied(false);
     };
 
     const handleCopy = async () => {
@@ -69,16 +72,17 @@ const Translator = () => {
         try {
             await navigator.clipboard.writeText(translatedText);
 
-            setCopied(true);
-
-            setTimeout(() => {
-                setCopied(false);
-            }, 2000);
+            showToast(
+                "Translation copied to clipboard",
+                "success"
+            );
         } catch {
-            setError("Unable to copy translation.");
+            showToast(
+                "Unable to copy translation",
+                "error"
+            );
         }
     };
-
     return (
         <div className="container-fluid">
 
@@ -121,7 +125,7 @@ const Translator = () => {
                 onSwap={handleSwap}
                 onClear={handleClear}
                 onCopy={handleCopy}
-                copied={copied}
+                // copied={copied}
             />
 
         </div>

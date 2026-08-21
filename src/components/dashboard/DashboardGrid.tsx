@@ -39,9 +39,11 @@ const DashboardGrid = () => {
           title="Currency"
           icon={<FaMoneyBillWave />}
         >
-          <p className="mb-0">
-            Currency converter coming soon.
+
+          <p className="mb-3">
+            Convert between different currencies using live exchange rates.
           </p>
+
 
           <button
             className="btn btn-primary w-100"
@@ -59,8 +61,9 @@ const DashboardGrid = () => {
           title="Unit Converter"
           icon={<FaRulerCombined />}
         >
-          <p className="mb-0">
-            Unit converter coming soon.
+
+          <p className="mb-3">
+            Convert measurements across different units and categories.
           </p>
 
           <button
@@ -77,8 +80,8 @@ const DashboardGrid = () => {
           title="Weather"
           icon={<FaCloudSun />}
         >
-          <p className="mb-0">
-            Weather widget coming soon.
+          <p className="mb-3">
+            Check current weather conditions and forecasts.
           </p>
 
           <button
@@ -89,14 +92,16 @@ const DashboardGrid = () => {
           </button>
         </DashboardCard>
       </div>
-      
+
       <div className="col-lg-4 col-md-6">
         <DashboardCard
           title="Translator"
           icon={<FaGlobe />}
         >
           <p className="mb-0">
-            Language translator coming soon.
+            <p className="mb-0">
+              Translate text between different languages.
+            </p>
           </p>
 
           <button
@@ -115,7 +120,9 @@ const DashboardGrid = () => {
           icon={<FaClock />}
         >
           <p className="mb-0">
-            Live clock coming soon.
+            <p className="mb-0">
+              View time across different timezones.
+            </p>
           </p>
 
           <button

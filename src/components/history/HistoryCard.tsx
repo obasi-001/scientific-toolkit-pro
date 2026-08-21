@@ -1,4 +1,5 @@
 import "../../styles/History.css";
+import { useToast } from "../../contexts/ToastContext";
 
 interface HistoryCardProps {
   id: string;
@@ -8,7 +9,6 @@ interface HistoryCardProps {
   onReuse: (expression: string) => void;
   onDelete: (id: string) => void;
 }
-import { useState } from "react";
 
 
 const HistoryCard = ({
@@ -20,7 +20,7 @@ const HistoryCard = ({
   onDelete
 }: HistoryCardProps) => {
 
-  const [copied, setCopied] = useState(false);
+  const { showToast } = useToast();
   return (
     <div
       className="card shadow-sm mb-3 history-card"
@@ -59,20 +59,22 @@ const HistoryCard = ({
           </h4>
 
           <button
+            type="button"
             className="btn btn-sm btn-outline-primary"
-            onClick={(e) => {
+            onClick={async (e) => {
               e.stopPropagation();
 
-              navigator.clipboard.writeText(result);
+              try {
+                await navigator.clipboard.writeText(result);
 
-              setCopied(true);
-
-              setTimeout(() => {
-                setCopied(false);
-              }, 1500);
+                showToast("Copied to clipboard", "success");
+              } catch {
+                showToast("Unable to copy result", "error");
+              }
             }}
+            title="Copy result"
           >
-            {copied ? "✅" : "📋"}
+            📋
           </button>
 
         </div>
