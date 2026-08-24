@@ -8,6 +8,7 @@ import {
   FaRulerCombined,
   FaClock,
   FaCalculator,
+  FaRobot
 } from "react-icons/fa";
 
 const DashboardGrid = () => {
@@ -130,6 +131,25 @@ const DashboardGrid = () => {
             onClick={() => navigate("/clock")}
           >
             Open Clock
+          </button>
+        </DashboardCard>
+      </div>
+
+      <div className="col-lg-4 col-md-6">
+        <DashboardCard
+          title="AI Assistant"
+          icon={<FaRobot />}
+        >
+          <p className="mb-0">
+            Get intelligent help with mathematics, science,
+            statistics, and more.
+          </p>
+
+          <button
+            className="btn btn-primary w-100 mt-3"
+            onClick={() => navigate("/ai")}
+          >
+            Open AI Assistant
           </button>
         </DashboardCard>
       </div>

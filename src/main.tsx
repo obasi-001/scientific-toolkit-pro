@@ -9,6 +9,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { PreferencesProvider } from "./contexts/PreferencesContext";
 import { ToastProvider } from "./contexts/ToastContext";
+import { AuthProvider } from "./contexts/AuthContext";
 
 import { HistoryProvider } from "./contexts/HistoryContext";
 import "./styles/variables.css";
@@ -34,7 +35,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <PreferencesProvider>
                 <HistoryProvider>
                     <ToastProvider>
-                        <App />
+                        <AuthProvider>
+                            <App />
+                        </AuthProvider>
                     </ToastProvider>
                 </HistoryProvider>
             </PreferencesProvider>

@@ -10,6 +10,10 @@ import Translator from "./pages/Translator";
 import History from "./pages/History";
 import Clock from "./pages/Clock";
 import Settings from "./pages/Settings";
+import Login from "./pages/Login";
+import AI from "./pages/AI";
+import AILogin from "./pages/AILogin";
+import AIRegister from "./pages/AIRegister";
 
 function App() {
     return (
@@ -20,18 +24,16 @@ function App() {
                     <Route path="/dashboard" element={<Home />} />
                     <Route path="/calculator" element={<CalculatorPage />} />
                     <Route path="/currency" element={<Currency />} />
-                    <Route
-                        path="/unit-converter"
-                        element={<UnitConverter />}
-                    />
+                    <Route path="/unit-converter" element={<UnitConverter />} />
                     <Route path="/weather" element={<Weather />} />
-                    <Route
-                        path="/translator"
-                        element={<Translator />}
-                    />
+                    <Route path="/translator" element={<Translator />} />
                     <Route path="/history" element={<History />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/clock" element={<Clock />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/ai" element={<AI />} />
+                    <Route path="/ai-login" element={<AILogin />} />
+                    <Route path="/ai-register" element={<AIRegister />} />
                 </Routes>
             </MainLayout>
         </BrowserRouter>

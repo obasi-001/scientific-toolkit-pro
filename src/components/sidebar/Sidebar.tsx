@@ -8,6 +8,7 @@ import {
     FaHistory,
     FaCog,
     FaClock,
+    FaRobot
 } from "react-icons/fa";
 
 import { NavLink } from "react-router-dom";
@@ -58,6 +59,11 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
             icon: <FaHistory />,
             label: "History",
             path: "/history",
+        },
+        {
+            icon: <FaRobot />,
+            label: "AI Assistant",
+            path: "/ai",
         },
         {
             icon: <FaCog />,
