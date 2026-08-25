@@ -1,6 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
+import {
+    initializeAppCheck,
+    ReCaptchaEnterpriseProvider,
+} from "firebase/app-check";
+
+import app from "./services/firebase";
+
 import App from "./App";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -28,6 +35,29 @@ import "./styles/history.css";
 import "./styles/settings.css";
 import "./styles/footer.css";
 import "./styles/dashboard.css";
+
+
+
+// initializeAppCheck(app, {
+//     provider: new ReCaptchaEnterpriseProvider(
+//         import.meta.env.VITE_RECAPTCHA_SITE_KEY
+//     ),
+//     isTokenAutoRefreshEnabled: true,
+// });
+
+if (import.meta.env.DEV) {
+    (self as typeof globalThis & {
+        FIREBASE_APPCHECK_DEBUG_TOKEN?: string | boolean;
+    }).FIREBASE_APPCHECK_DEBUG_TOKEN =
+        import.meta.env.VITE_FIREBASE_APPCHECK_DEBUG_TOKEN;
+}
+
+initializeAppCheck(app, {
+    provider: new ReCaptchaEnterpriseProvider(
+        import.meta.env.VITE_RECAPTCHA_SITE_KEY
+    ),
+    isTokenAutoRefreshEnabled: true,
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>

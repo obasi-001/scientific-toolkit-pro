@@ -1,6 +1,15 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import {
+    initializeAppCheck,
+    ReCaptchaEnterpriseProvider,
+} from "firebase/app-check";
+
+// Local development: enable Firebase App Check debug mode
+if (import.meta.env.DEV) {
+    self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+}
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -16,5 +25,15 @@ const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+// App Check
+const appCheck = initializeAppCheck(app, {
+    provider: new ReCaptchaEnterpriseProvider(
+        import.meta.env.VITE_RECAPTCHA_ENTERPRISE_KEY
+    ),
+    isTokenAutoRefreshEnabled: true,
+});
+
+export { appCheck };
 
 export default app;
