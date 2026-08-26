@@ -99,10 +99,8 @@ const DashboardGrid = () => {
           title="Translator"
           icon={<FaGlobe />}
         >
-          <p className="mb-0">
-            <p className="mb-0">
-              Translate text between different languages.
-            </p>
+          <p className="mb-3">
+            Translate text between different languages.
           </p>
 
           <button
@@ -120,12 +118,9 @@ const DashboardGrid = () => {
           title="Clock"
           icon={<FaClock />}
         >
-          <p className="mb-0">
-            <p className="mb-0">
-              View time across different timezones.
-            </p>
+          <p className="mb-3">
+            View time across different timezones.
           </p>
-
           <button
             className="btn btn-primary w-100"
             onClick={() => navigate("/clock")}

@@ -1,23 +1,24 @@
 import {
-    getAI,
     getGenerativeModel,
-    GoogleAIBackend,
+    type GenerativeModel,
 } from "firebase/ai";
 
-import app from "./firebase";
+import { ai } from "./firebase";
 
-const ai = getAI(app, {
-    backend: new GoogleAIBackend(),
+const model: GenerativeModel = getGenerativeModel(ai, {
+    model: "gemini-3.6-flash",
 });
 
-const model = getGenerativeModel(ai, {
-    model: "gemini-2.5-flash",
-});
-
-export const askAI = async (
+export const generateAIResponse = async (
     prompt: string
 ): Promise<string> => {
+    if (!prompt.trim()) {
+        throw new Error("Please enter a question.");
+    }
+
     const result = await model.generateContent(prompt);
 
-    return result.response.text();
+    const response = result.response;
+
+    return response.text();
 };
