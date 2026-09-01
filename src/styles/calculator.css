@@ -1,60 +1,172 @@
+/* =========================
+   Calculator Container
+   ========================= */
+
 .calculator-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    box-sizing: border-box;
 }
 
-.calculator-display {
-    background: #0f172a;
-    color: white;
-    padding: 25px;
-    border-radius: 18px;
-    text-align: right;
+
+/* =========================
+   Mobile - Fit Entire
+   Calculator In Viewport
+   ========================= */
+
+@media (max-width: 768px) {
+
+    .calculator-container {
+        width: 100%;
+        max-width: 100%;
+        height: calc(100dvh - 100px);
+        max-height: calc(100dvh - 100px);
+        gap: 8px;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .calculator-display {
+        flex-shrink: 1;
+        min-height: 0;
+        padding: 12px;
+        border-radius: 14px;
+        box-sizing: border-box;
+    }
+
+    .previous-expression {
+        font-size: clamp(11px, 3vw, 16px);
+    }
+
+    .current-expression {
+        font-size: clamp(20px, 7vw, 32px);
+        line-height: 1.1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* 6 scientific buttons */
+    .scientific-grid {
+        flex-shrink: 1;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 5px;
+        margin-top: 4px;
+        min-height: 0;
+    }
+
+    /* 4 main buttons */
+    .main-grid {
+        flex-shrink: 1;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+        min-height: 0;
+    }
+
+    .scientific-grid .calculator-btn {
+        width: 100%;
+        height: clamp(32px, 7vw, 48px);
+        padding: 0;
+        border-radius: 10px;
+        font-size: clamp(0.65rem, 2.5vw, 0.85rem);
+    }
+
+    .main-grid .calculator-btn {
+        width: 100%;
+        height: clamp(40px, 12vw, 60px);
+        padding: 0;
+        border-radius: 12px;
+        font-size: clamp(0.85rem, 3.5vw, 1.05rem);
+    }
 }
 
-.previous-expression {
-    font-size: 18px;
-    opacity: .7;
+
+/* =========================
+   Smaller Phones
+   ========================= */
+
+@media (max-width: 480px) {
+
+    .calculator-container {
+        height: calc(100dvh - 90px);
+        max-height: calc(100dvh - 90px);
+        gap: 6px;
+    }
+
+    .calculator-display {
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .scientific-grid {
+        gap: 4px;
+        margin-top: 2px;
+    }
+
+    .main-grid {
+        gap: 4px;
+    }
+
+    .scientific-grid .calculator-btn {
+        height: clamp(30px, 8vw, 44px);
+        border-radius: 8px;
+    }
+
+    .main-grid .calculator-btn {
+        height: clamp(38px, 12vw, 56px);
+        border-radius: 10px;
+    }
 }
 
-.current-expression {
-    font-size: 42px;
-    font-weight: bold;
-}
 
-.scientific-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
-    margin-top: 20px;
-}
+/* =========================
+   Very Small Phones
+   ========================= */
 
-.main-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-}
+@media (max-width: 360px) {
 
-.calculator-btn {
-    height: 72px;
-    border-radius: 18px;
-    font-size: 1.1rem;
-    font-weight: 600;
-}
+    .calculator-container {
+        height: calc(100dvh - 80px);
+        max-height: calc(100dvh - 80px);
+        gap: 4px;
+    }
 
-.scientific-grid .calculator-btn {
-    height: 58px;
-    font-size: 1rem;
-}
+    .calculator-display {
+        padding: 8px;
+        border-radius: 10px;
+    }
 
-.main-grid .calculator-btn {
-    height: 72px;
-    font-size: 1.2rem;
-}
-/* .calculator-btn:hover {
-    transform: translateY(-3px);
-}
+    .previous-expression {
+        font-size: 11px;
+    }
 
-.calculator-btn:active {
-    transform: scale(0.95);
-} */
+    .current-expression {
+        font-size: 20px;
+    }
+
+    .scientific-grid {
+        gap: 3px;
+    }
+
+    .main-grid {
+        gap: 3px;
+    }
+
+    .scientific-grid .calculator-btn {
+        height: 28px;
+        font-size: 0.62rem;
+        border-radius: 7px;
+    }
+
+    .main-grid .calculator-btn {
+        height: 38px;
+        font-size: 0.85rem;
+        border-radius: 9px;
+    }
+}

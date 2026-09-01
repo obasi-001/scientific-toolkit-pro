@@ -2,6 +2,7 @@
     width: 260px;
     min-height: 100vh;
     background: var(--surface);
+    color: var(--text);
     box-shadow: var(--shadow);
     padding: 25px;
     flex-shrink: 0;
@@ -29,17 +30,16 @@
 .sidebar ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .sidebar li {
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 14px 18px;
     margin-bottom: 10px;
     border-radius: 12px;
     cursor: pointer;
-    transition: var(--transition);
 }
 
 .sidebar-link {
@@ -70,33 +70,70 @@
     background: var(--primary);
 }
 
+
+/* =========================================
+   MOBILE SIDEBAR
+   ========================================= */
+
 @media (max-width: 991.98px) {
+
     .main-layout {
         position: relative;
+        display: block;
     }
 
     .sidebar {
         position: fixed;
-        top: 0;
+
+        top: 73px;
         left: 0;
+
         z-index: 1050;
 
-        height: 100vh;
         width: 260px;
 
+        height: calc(100vh - 73px);
+        min-height: 0;
+
+        padding: 20px;
+
         overflow-y: auto;
+        overflow-x: hidden;
+
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+
+        transition:
+            transform 0.3s ease,
+            opacity 0.3s ease;
     }
 
     .sidebar-open {
         width: 260px;
+
         opacity: 1;
+
+        transform: translateX(0);
+
+        pointer-events: auto;
     }
 
     .sidebar-closed {
-        width: 0;
-        padding-left: 0;
-        padding-right: 0;
+        width: 260px;
+
+        padding: 20px;
+
         opacity: 0;
+
+        transform: translateX(-100%);
+
+        box-shadow: none;
+
         pointer-events: none;
+    }
+
+    .dashboard {
+        width: 100%;
+        min-width: 0;
     }
 }

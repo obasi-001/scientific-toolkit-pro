@@ -22,9 +22,9 @@ const CalculatorDisplay = ({
   return (
     <div className="calculator-display shadow rounded p-4 mb-4">
 
-      <div className="text-center mb-3">
+      <div className="text-center text-muted">
         <h4 className="fw-bold mb-0">
-          Scientific Toolkit Pro
+          SCIENTIFIC CALCULATOR
         </h4>
       </div>
 
