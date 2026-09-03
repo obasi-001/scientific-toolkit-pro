@@ -56,7 +56,7 @@ const CalculatorGrid = ({
   ];
 
   return (
-    <>
+    <div className="calculator-keypad">
       <div className="scientific-grid">
         {scientificButtons.map((button) => (
           <CalculatorButton
@@ -76,7 +76,7 @@ const CalculatorGrid = ({
           />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

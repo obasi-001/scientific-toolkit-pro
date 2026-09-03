@@ -1,0 +1,318 @@
+.tool-page,
+.dashboard-page {
+    width: 100%;
+    min-width: 0;
+}
+
+.tool-page > .mb-4,
+.dashboard-page > .mb-4 {
+    min-width: 0;
+}
+
+.currency-page h3 {
+    overflow-wrap: anywhere;
+}
+
+.clock-page .list-group {
+    max-height: min(32dvh, 220px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+@media (max-width: 1199.98px) {
+    .dashboard-page .row.g-4,
+    .tool-page .row.g-4 {
+        --bs-gutter-x: 1.25rem;
+        --bs-gutter-y: 1.25rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .dashboard-page .row.g-4,
+    .tool-page .row.g-4 {
+        --bs-gutter-x: 1rem;
+        --bs-gutter-y: 1rem;
+    }
+
+    .dashboard-page .dashboard-card {
+        height: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .tool-page.container-fluid {
+        padding-inline: 0;
+    }
+
+    .tool-page > .mb-4,
+    .dashboard-page > .mb-4 {
+        margin-bottom: 1rem !important;
+    }
+
+    .tool-page h2,
+    .dashboard-page h2 {
+        font-size: clamp(1.25rem, 5vw, 1.65rem);
+        line-height: 1.2;
+    }
+
+    .tool-page > .mb-4 p,
+    .dashboard-page > .mb-4 p {
+        font-size: 0.95rem;
+    }
+
+    .tool-page .card-body.p-4,
+    .tool-page .card-body.p-md-5 {
+        padding: 1rem !important;
+    }
+
+    .currency-page .btn,
+    .unit-page .btn,
+    .translator-page .btn,
+    .weather-page .btn,
+    .clock-page .btn {
+        min-height: 42px;
+    }
+
+    .currency-page .alert h3 {
+        font-size: clamp(1rem, 4.8vw, 1.35rem);
+        line-height: 1.25;
+    }
+
+    .unit-page .input-group {
+        align-items: stretch;
+    }
+
+    .translator-page textarea {
+        height: clamp(112px, 24dvh, 170px);
+        min-height: 0;
+        overflow-y: auto;
+        resize: vertical;
+    }
+
+    .weather-page .display-3 {
+        font-size: clamp(2.25rem, 12vw, 4rem);
+        line-height: 1;
+    }
+
+    .weather-page .border.rounded.p-3 {
+        padding: 0.75rem !important;
+    }
+
+    .clock-page .card + .card {
+        margin-top: 1rem !important;
+    }
+
+    .clock-page .card-body > div.fw-bold {
+        font-size: clamp(1.75rem, 9vw, 3rem) !important;
+        line-height: 1.05;
+    }
+
+    .clock-page select.form-select {
+        width: 100% !important;
+        max-width: 280px;
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard-page .row.g-4,
+    .tool-page .row.g-4,
+    .tool-page .row.g-3 {
+        --bs-gutter-x: 0.75rem;
+        --bs-gutter-y: 0.75rem;
+    }
+
+    .tool-page > .mb-4,
+    .dashboard-page > .mb-4 {
+        margin-bottom: 0.875rem !important;
+    }
+
+    .tool-page > .mb-4 p,
+    .dashboard-page > .mb-4 p {
+        font-size: 0.9rem;
+    }
+
+    .dashboard-page .dashboard-card {
+        padding: 12px;
+        border-radius: 14px;
+    }
+
+    .currency-page .card-body.p-4,
+    .unit-page .card-body.p-4,
+    .translator-page .card-body.p-4,
+    .weather-page .card-body,
+    .clock-page .card-body {
+        padding: 0.875rem !important;
+    }
+
+    .unit-page .input-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .unit-page .input-group > .form-control,
+    .unit-page .input-group > .form-select {
+        width: 100%;
+        border-radius: 0.375rem !important;
+    }
+
+    .translator-page textarea {
+        height: 104px;
+    }
+
+    .translator-page .d-flex.flex-wrap.gap-2 > .btn {
+        flex: 1 1 100%;
+    }
+
+    .weather-page .text-center.my-4 {
+        margin-block: 1rem !important;
+    }
+
+    .clock-page .d-flex.justify-content-center {
+        gap: 0.5rem !important;
+    }
+
+    .clock-page .d-flex.justify-content-center > .btn {
+        flex: 1 1 calc(50% - 0.5rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .tool-page h2,
+    .dashboard-page h2 {
+        font-size: 1.2rem;
+    }
+
+    .currency-page .card-body.p-4,
+    .unit-page .card-body.p-4,
+    .translator-page .card-body.p-4,
+    .weather-page .card-body,
+    .clock-page .card-body {
+        padding: 0.75rem !important;
+    }
+
+    .currency-page .form-label,
+    .unit-page .form-label,
+    .translator-page .form-label {
+        margin-bottom: 0.35rem;
+        font-size: 0.9rem;
+    }
+
+    .translator-page textarea {
+        height: 92px;
+    }
+
+    .weather-page img {
+        width: 52px;
+        height: 52px;
+    }
+
+    .weather-page h4 {
+        font-size: 1.05rem;
+    }
+
+    .clock-page .card-body > div.fw-bold {
+        font-size: clamp(1.65rem, 10vw, 2.35rem) !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .tool-page > .mb-4,
+    .dashboard-page > .mb-4 {
+        margin-bottom: 0.7rem !important;
+    }
+
+    .dashboard-page .dashboard-card {
+        padding: 10px;
+    }
+
+    .currency-page .btn,
+    .unit-page .btn,
+    .translator-page .btn,
+    .weather-page .btn,
+    .clock-page .btn {
+        min-height: 38px;
+        padding-inline: 0.5rem;
+    }
+
+    .translator-page textarea {
+        height: 82px;
+    }
+}
+
+@media (max-width: 768px) and (max-height: 700px) {
+    .tool-page > .mb-4,
+    .dashboard-page > .mb-4 {
+        margin-bottom: 0.75rem !important;
+    }
+
+    .tool-page h2,
+    .dashboard-page h2 {
+        font-size: 1.12rem;
+    }
+
+    .tool-page > .mb-4 p,
+    .dashboard-page > .mb-4 p {
+        font-size: 0.82rem;
+    }
+
+    .translator-page textarea {
+        height: 78px;
+    }
+
+    .weather-page .display-3 {
+        font-size: 2rem;
+    }
+
+    .clock-page .card-body > div.fw-bold {
+        font-size: 1.85rem !important;
+    }
+
+    .clock-page .list-group {
+        max-height: 120px;
+    }
+}
+
+@media (max-width: 768px) and (max-height: 620px) {
+    .currency-page .card-body.p-4,
+    .unit-page .card-body.p-4,
+    .translator-page .card-body.p-4,
+    .weather-page .card-body,
+    .clock-page .card-body {
+        padding: 0.625rem !important;
+    }
+
+    .tool-page .row.g-4,
+    .tool-page .row.g-3 {
+        --bs-gutter-y: 0.55rem;
+    }
+
+    .translator-page textarea {
+        height: 68px;
+    }
+
+    .weather-page .text-center.my-4 {
+        margin-block: 0.65rem !important;
+    }
+
+    .clock-page .card + .card {
+        margin-top: 0.625rem !important;
+    }
+}
+
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 520px) {
+    .tool-page > .mb-4 {
+        margin-bottom: 0.5rem !important;
+    }
+
+    .translator-page textarea {
+        height: 58px;
+    }
+
+    .weather-page .row.g-3.text-center {
+        --bs-gutter-y: 0.5rem;
+    }
+
+    .clock-page .card-body > div.fw-bold {
+        font-size: 1.65rem !important;
+    }
+}
