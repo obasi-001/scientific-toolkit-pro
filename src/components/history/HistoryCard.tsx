@@ -1,4 +1,4 @@
-import "../../styles/History.css";
+import "../../styles/history.css";
 import { useToast } from "../../contexts/ToastContext";
 
 interface HistoryCardProps {
