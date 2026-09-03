@@ -8,69 +8,37 @@ const CalculatorButton = ({
   onClick,
 }: CalculatorButtonProps) => {
   const operators = ["+", "-", "×", "÷", "="];
+  const controls = ["AC", "DEL", "%"];
+  const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "±"];
 
-  const scientific = [
-    "sin",
-    "cos",
-    "tan",
-    "sinh",
-    "cosh",
-    "tanh",
-    "log",
-    "ln",
-    "√",
-    "²√x",
-    "³√x",
-    "ʸ√x",
-    "x²",
-    "x³",
-    "xʸ",
-    "10ˣ",
-    "eˣ",
-    "x!",
-    "1/x",
-    "2nd",
-  ];
+  const displayLabel: Record<string, string> = {
+    DEL: "⌫",
+    "√": "²√x",
+    log: "log₁₀",
+  };
 
-  const memory = [
-    "MC",
-    "MR",
-    "M+",
-    "M-",
-    "π",
-    "e",
-    "EE",
-    "Deg",
-    "Rand",
-  ];
-
-  const editing = [
-    "AC",
-    "DEL",
-    "%",
-    "(",
-    ")",
-    "±",
-  ];
-
-  let buttonClass = "btn btn-light";
+  let tone = "scientific";
 
   if (operators.includes(label)) {
-    buttonClass = "btn btn-warning text-white";
-  } else if (scientific.includes(label)) {
-    buttonClass = "btn btn-primary";
-  } else if (memory.includes(label)) {
-    buttonClass = "btn btn-secondary";
-  } else if (editing.includes(label)) {
-    buttonClass = "btn btn-dark";
+    tone = "operator";
+  } else if (controls.includes(label)) {
+    tone = "control";
+  } else if (numbers.includes(label)) {
+    tone = "number";
   }
 
   return (
     <button
-      className={`${buttonClass} calculator-btn`}
+      type="button"
+      className={`calculator-btn calculator-btn-${tone}`}
       onClick={onClick}
+      aria-label={label === "DEL" ? "Delete" : label}
     >
-      {label}
+      {label === "DEL" ? (
+        <i className="bi bi-backspace" aria-hidden="true" />
+      ) : (
+        displayLabel[label] ?? label
+      )}
     </button>
   );
 };

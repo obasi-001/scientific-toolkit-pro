@@ -70,6 +70,10 @@
     background: var(--primary);
 }
 
+.sidebar-backdrop {
+    display: none;
+}
+
 
 /* =========================================
    MOBILE SIDEBAR
@@ -77,9 +81,30 @@
 
 @media (max-width: 991.98px) {
 
+    html.sidebar-scroll-lock,
+    body.sidebar-scroll-lock {
+        overflow: hidden;
+        overscroll-behavior: none;
+    }
+
     .main-layout {
         position: relative;
         display: block;
+    }
+
+    .sidebar-backdrop {
+        position: fixed;
+        top: 73px;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1040;
+        display: block;
+        border: 0;
+        padding: 0;
+        background: rgba(17, 24, 39, 0.34);
+        cursor: pointer;
+        touch-action: none;
     }
 
     .sidebar {
@@ -93,9 +118,10 @@
         width: 260px;
 
         height: calc(100vh - 73px);
+        height: calc(100dvh - 73px);
         min-height: 0;
 
-        padding: 20px;
+        padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
 
         overflow-y: auto;
         overflow-x: hidden;
@@ -116,6 +142,7 @@
         transform: translateX(0);
 
         pointer-events: auto;
+        touch-action: pan-y;
     }
 
     .sidebar-closed {
@@ -135,5 +162,12 @@
     .dashboard {
         width: 100%;
         min-width: 0;
+    }
+
+    body.sidebar-scroll-lock .dashboard,
+    body.sidebar-scroll-lock .tool-page,
+    body.sidebar-scroll-lock .dashboard-page {
+        overflow: hidden;
+        touch-action: none;
     }
 }

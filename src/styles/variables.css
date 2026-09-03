@@ -171,6 +171,7 @@ body {
     opacity: 1;
 }
 
+
 @keyframes toastSlideIn {
     from {
         opacity: 0;

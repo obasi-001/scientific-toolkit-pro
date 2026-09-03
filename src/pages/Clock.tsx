@@ -15,7 +15,7 @@ const Clock = () => {
   } = usePreferences();
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid tool-page clock-page">
 
       <div className="mb-4">
         <h2 className="fw-bold mb-1">

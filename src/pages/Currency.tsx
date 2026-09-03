@@ -82,7 +82,7 @@ const Currency = () => {
   };
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid tool-page currency-page">
 
       <div className="mb-4">
         <h2 className="fw-bold mb-1">

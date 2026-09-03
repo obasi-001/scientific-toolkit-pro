@@ -20,34 +20,21 @@ const CalculatorDisplay = ({
   hasMemory
 }: CalculatorDisplayProps) => {
   return (
-    <div className="calculator-display shadow rounded p-4 mb-4">
-
-      <div className="text-center text-muted">
-        <h4 className="fw-bold mb-0">
-          SCIENTIFIC CALCULATOR
-        </h4>
-      </div>
-
-      <div className="d-flex justify-content-end gap-2 mb-2">
-
-    {hasMemory && (
-        <span className="badge bg-success">
+    <div className="calculator-display">
+      <div className="display-indicators">
+        {hasMemory && (
+          <span className="memory-indicator">
             M
-        </span>
-    )}
-
-    <span className="badge bg-primary">
-        {mode}
-    </span>
-
-</div>
+          </span>
+        )}
+      </div>
 
       <input
         ref={inputRef}
         type="text"
-        className="previous-expression form-control text-end border-0 shadow-none"
+        className="previous-expression"
         value={expression}
-        placeholder="Enter expression..."
+        placeholder=""
         onChange={(e) => onExpressionChange(e.target.value)}
       />
 
@@ -55,6 +42,9 @@ const CalculatorDisplay = ({
         {result}
       </div>
 
+      <div className="angle-indicator">
+        {mode === "DEG" ? "Deg" : "Rad"}
+      </div>
     </div>
   );
 };

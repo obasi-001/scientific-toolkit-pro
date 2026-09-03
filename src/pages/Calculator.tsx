@@ -2,7 +2,7 @@ import Calculator from "../components/calculator/Calculator";
 
 const CalculatorPage = () => {
     return (
-        <div className="container-fluid py-3">
+        <div className="calculator-page">
             <Calculator />
         </div>
     );

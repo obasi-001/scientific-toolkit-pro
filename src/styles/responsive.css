@@ -28,6 +28,37 @@
 }
 
 @media (max-width: 991.98px) {
+    .app-mobile-fit-mode {
+        height: 100vh;
+        min-height: 100vh;
+        height: 100dvh;
+        min-height: 100dvh;
+        overflow: hidden;
+    }
+
+    .app-mobile-fit-mode .main-layout {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .app-mobile-fit-mode .dashboard-mobile-fit-mode {
+        height: 100%;
+        min-height: 0;
+        padding: 18px;
+        overflow: hidden;
+    }
+
+    .app-mobile-fit-mode .tool-page,
+    .app-mobile-fit-mode .dashboard-page {
+        height: 100%;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
     .dashboard-page .row.g-4,
     .tool-page .row.g-4 {
         --bs-gutter-x: 1rem;
@@ -83,10 +114,10 @@
     }
 
     .translator-page textarea {
-        height: clamp(112px, 24dvh, 170px);
+        height: clamp(76px, 16dvh, 112px);
         min-height: 0;
         overflow-y: auto;
-        resize: vertical;
+        resize: none;
     }
 
     .weather-page .display-3 {
@@ -156,7 +187,7 @@
     }
 
     .translator-page textarea {
-        height: 104px;
+        height: 82px;
     }
 
     .translator-page .d-flex.flex-wrap.gap-2 > .btn {
@@ -198,7 +229,7 @@
     }
 
     .translator-page textarea {
-        height: 92px;
+        height: 72px;
     }
 
     .weather-page img {
@@ -235,7 +266,7 @@
     }
 
     .translator-page textarea {
-        height: 82px;
+        height: 64px;
     }
 }
 
@@ -256,7 +287,7 @@
     }
 
     .translator-page textarea {
-        height: 78px;
+        height: 62px;
     }
 
     .weather-page .display-3 {
@@ -287,7 +318,7 @@
     }
 
     .translator-page textarea {
-        height: 68px;
+        height: 56px;
     }
 
     .weather-page .text-center.my-4 {
@@ -305,7 +336,7 @@
     }
 
     .translator-page textarea {
-        height: 58px;
+        height: 48px;
     }
 
     .weather-page .row.g-3.text-center {

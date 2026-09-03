@@ -3,7 +3,12 @@ import { useTheme } from "../contexts/ThemeContext";
 import { usePreferences } from "../contexts/PreferencesContext";
 
 const Settings = () => {
-    const { theme, toggleTheme } = useTheme();
+    const {
+        theme,
+        themeMode,
+        toggleTheme,
+        useSystemTheme,
+    } = useTheme();
 
     const {
         preferences,
@@ -16,6 +21,13 @@ const Settings = () => {
     const handleResetPreferences = () => {
         resetPreferences();
     };
+
+    const themeLabel =
+        themeMode === "system"
+            ? `System (${theme === "dark" ? "Dark" : "Light"} mode)`
+            : theme === "dark"
+              ? "Dark mode"
+              : "Light mode";
 
     return (
         <div className="container-fluid">
@@ -38,22 +50,32 @@ const Settings = () => {
                     <div>
                         <strong>Theme</strong>
                         <div className="text-muted">
-                            {theme === "dark"
-                                ? "Dark mode"
-                                : "Light mode"}
+                            {themeLabel}
                         </div>
                     </div>
 
-                    <button
-                        type="button"
-                        className="btn btn-outline-primary"
-                        onClick={toggleTheme}
-                    >
-                        Switch to{" "}
-                        {theme === "dark"
-                            ? "Light"
-                            : "Dark"}
-                    </button>
+                    <div className="d-flex gap-2 flex-wrap justify-content-end">
+                        <button
+                            type="button"
+                            className="btn btn-outline-primary"
+                            onClick={toggleTheme}
+                        >
+                            Switch to{" "}
+                            {theme === "dark"
+                                ? "Light"
+                                : "Dark"}
+                        </button>
+
+                        {themeMode !== "system" && (
+                            <button
+                                type="button"
+                                className="btn btn-outline-secondary"
+                                onClick={useSystemTheme}
+                            >
+                                Use System
+                            </button>
+                        )}
+                    </div>
                 </div>
             </SettingsCard>
 
