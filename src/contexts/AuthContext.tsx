@@ -12,6 +12,7 @@ import {
 
 import {
     createUserWithEmailAndPassword,
+    getRedirectResult,
     GoogleAuthProvider,
     onAuthStateChanged,
     sendPasswordResetEmail,
@@ -109,31 +110,59 @@ export const AuthProvider = ({
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        let isActive = true;
+
+        const initializeAIUser = async (
+            currentUser: User
+        ) => {
+            try {
+                await createAIUserIfNeeded(currentUser);
+            } catch (error) {
+                console.error(
+                    "Unable to initialize AI user:",
+                    error
+                );
+            }
+        };
+
+        const updateAuthUser = (currentUser: User | null) => {
+            if (!isActive) {
+                return;
+            }
+
+            setUser(currentUser);
+            setLoading(false);
+
+            if (currentUser) {
+                void initializeAIUser(currentUser);
+            }
+        };
+
         const unsubscribe = onAuthStateChanged(
             auth,
-            async (currentUser) => {
-                try {
-                    if (currentUser) {
-                        await createAIUserIfNeeded(
-                            currentUser
-                        );
-                    }
-
-                    setUser(currentUser);
-                } catch (error) {
-                    console.error(
-                        "Unable to initialize AI user:",
-                        error
-                    );
-
-                    setUser(currentUser);
-                } finally {
-                    setLoading(false);
-                }
-            }
+            updateAuthUser
         );
 
-        return unsubscribe;
+        void getRedirectResult(auth)
+            .then((result) => {
+                if (result?.user) {
+                    updateAuthUser(result.user);
+                }
+            })
+            .catch((error) => {
+                if (isActive) {
+                    console.error(
+                        "Unable to complete Google redirect sign-in:",
+                        error
+                    );
+                    setLoading(false);
+                }
+            });
+
+        return () => {
+            isActive = false;
+            unsubscribe();
+        };
     }, []);
 
     const loginWithGoogle = async () => {

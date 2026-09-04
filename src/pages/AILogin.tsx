@@ -9,6 +9,7 @@ const AILogin = () => {
     const {
         login,
         loginWithGoogle,
+        loading: authLoading,
         user,
     } = useAuth();
 
@@ -18,6 +19,7 @@ const AILogin = () => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const googleLoginInFlightRef = useRef(false);
+    const isSigningIn = loading || authLoading;
 
     useEffect(() => {
         if (user) {
@@ -62,7 +64,7 @@ const AILogin = () => {
     };
 
     const handleGoogleLogin = async () => {
-        if (loading || googleLoginInFlightRef.current) {
+        if (isSigningIn || googleLoginInFlightRef.current) {
             return;
         }
 
@@ -128,9 +130,9 @@ const AILogin = () => {
                                 type="button"
                                 className="btn auth-google-button w-100 mb-4"
                                 onClick={handleGoogleLogin}
-                                disabled={loading}
+                                disabled={isSigningIn}
                             >
-                                {loading
+                                {isSigningIn
                                     ? "Signing in..."
                                     : "Continue with Google"}
                             </button>
@@ -209,9 +211,9 @@ const AILogin = () => {
                                 <button
                                     type="submit"
                                     className="btn btn-primary w-100"
-                                    disabled={loading}
+                                    disabled={isSigningIn}
                                 >
-                                    {loading
+                                    {isSigningIn
                                         ? "Signing in..."
                                         : "Sign In"}
                                 </button>
