@@ -3,6 +3,9 @@ type ErrorWithCode = {
     message?: unknown;
 };
 
+const GOOGLE_POPUP_ERROR_MESSAGE =
+    "Google sign-in did not finish. Tap Continue with Google again, or create an account below to continue.";
+
 const getErrorCode = (error: unknown): string => {
     if (
         typeof error === "object" &&
@@ -43,7 +46,7 @@ export const getAuthErrorMessage = (
         code === "auth/popup-closed-by-user" ||
         code === "auth/operation-not-supported-in-this-environment"
     ) {
-        return "Unable to sign in. Try again or create an account below to continue.";
+        return GOOGLE_POPUP_ERROR_MESSAGE;
     }
 
     if (code === "auth/network-request-failed") {
