@@ -107,7 +107,7 @@ const AILogin = () => {
 
                             <button
                                 type="button"
-                                className="btn btn-outline-dark w-100 mb-4"
+                                className="btn auth-google-button w-100 mb-4"
                                 onClick={handleGoogleLogin}
                                 disabled={loading}
                             >

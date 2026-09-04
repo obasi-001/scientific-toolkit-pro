@@ -180,7 +180,7 @@ const Login = () => {
 
                             <button
                                 type="button"
-                                className="btn btn-outline-dark w-100"
+                                className="btn auth-google-button w-100"
                                 onClick={handleGoogleLogin}
                                 disabled={loading}
                             >

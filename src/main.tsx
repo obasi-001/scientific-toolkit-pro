@@ -29,6 +29,7 @@ import "./styles/history.css";
 import "./styles/settings.css";
 import "./styles/footer.css";
 import "./styles/dashboard.css";
+import "./styles/ai.css";
 
 
 

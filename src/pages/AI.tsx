@@ -42,6 +42,7 @@ const AI = () => {
     const [error, setError] = useState("");
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const [copiedMessageId, setCopiedMessageId] = useState<number | null>(null);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const suggestions = [
         "Explain a calculation",
@@ -52,8 +53,22 @@ const AI = () => {
         "Ask anything",
     ];
 
+    const closeMobileMenu = () => {
+        setMobileMenuOpen(false);
+    };
+
+    const handleToggleMobileMenu = () => {
+        setMobileMenuOpen((previous) => !previous);
+    };
+
     const handleSuggestion = (suggestion: string) => {
         setPrompt(suggestion);
+        closeMobileMenu();
+    };
+
+    const handleLogout = () => {
+        closeMobileMenu();
+        void logout();
     };
 
     const handleCopy = async (content: string, messageId: number) => {
@@ -74,6 +89,24 @@ const AI = () => {
             behavior: "smooth",
         });
     }, [messages, loading]);
+
+    useEffect(() => {
+        if (!mobileMenuOpen) {
+            return;
+        }
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                setMobileMenuOpen(false);
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [mobileMenuOpen]);
 
     useEffect(() => {
         if (!user) {
@@ -118,6 +151,7 @@ const AI = () => {
         setMessages(conversation.messages ?? []);
         setPrompt("");
         setError("");
+        closeMobileMenu();
     };
 
     const handleNewChat = () => {
@@ -129,6 +163,7 @@ const AI = () => {
         setMessages([]);
         setPrompt("");
         setError("");
+        closeMobileMenu();
     };
 
     const handleDeleteConversation = async (conversationIdToDelete: string) => {
@@ -274,9 +309,120 @@ const AI = () => {
         }
     };
 
+    const renderConversationList = () => {
+        if (loadingConversations) {
+            return (
+                <p className="ai-menu-empty mb-0">
+                    Loading...
+                </p>
+            );
+        }
+
+        if (conversations.length === 0) {
+            return (
+                <p className="ai-menu-empty mb-0">
+                    No saved conversations yet.
+                </p>
+            );
+        }
+
+        return (
+            <div className="ai-conversation-list">
+                {conversations.map((conversation) => (
+                    <div
+                        key={conversation.id}
+                        className="ai-conversation-item"
+                    >
+                        <button
+                            type="button"
+                            className={`ai-conversation-button ${
+                                conversation.id === conversationId
+                                    ? "is-active"
+                                    : ""
+                            }`}
+                            onClick={() =>
+                                handleSelectConversation(
+                                    conversation
+                                )
+                            }
+                            disabled={loading}
+                        >
+                            <span>
+                                {conversation.title}
+                            </span>
+                        </button>
+
+                        <button
+                            type="button"
+                            className="ai-delete-button"
+                            onClick={() =>
+                                handleDeleteConversation(
+                                    conversation.id
+                                )
+                            }
+                            disabled={loading}
+                            aria-label={`Delete ${conversation.title}`}
+                            title="Delete conversation"
+                        >
+                            <i className="bi bi-trash"></i>
+                        </button>
+                    </div>
+                ))}
+            </div>
+        );
+    };
+
+    const renderSuggestions = () => (
+        <div className="ai-suggestion-list">
+            {suggestions.map((suggestion) => (
+                <button
+                    key={suggestion}
+                    type="button"
+                    className="ai-suggestion-button"
+                    onClick={() =>
+                        handleSuggestion(suggestion)
+                    }
+                >
+                    {suggestion}
+                </button>
+            ))}
+        </div>
+    );
+
+    const renderMenuContent = (
+        includeSuggestions: boolean
+    ) => (
+        <>
+            <section className="ai-menu-section">
+                <div className="ai-menu-section-header">
+                    <h3>Last chats</h3>
+
+                    <button
+                        type="button"
+                        className="ai-new-chat-button"
+                        onClick={handleNewChat}
+                        disabled={loading}
+                    >
+                        <i className="bi bi-pencil-square"></i>
+                        <span>New</span>
+                    </button>
+                </div>
+
+                {renderConversationList()}
+            </section>
+
+            {includeSuggestions && (
+                <section className="ai-menu-section">
+                    <h3>Ask me anything</h3>
+                    {renderSuggestions()}
+                </section>
+            )}
+        </>
+    );
+
     if (!user) {
         return (
-            <div className="container-fluid">
+            <div className="container-fluid ai-page ai-page-guest">
 
                 <div className="mb-4">
                     <h2 className="fw-bold mb-1">
@@ -341,9 +487,96 @@ const AI = () => {
     }
 
     return (
-        <div className="container-fluid">
+        <div
+            className={`container-fluid ai-page ${
+                mobileMenuOpen ? "ai-menu-open" : ""
+            }`}
+        >
+            <div className="ai-mobile-topbar">
+                <button
+                    type="button"
+                    className="ai-mobile-icon-button"
+                    onClick={handleToggleMobileMenu}
+                    aria-label={
+                        mobileMenuOpen
+                            ? "Close AI menu"
+                            : "Open AI menu"
+                    }
+                    aria-controls="ai-mobile-menu"
+                    aria-expanded={mobileMenuOpen}
+                >
+                    <i className="bi bi-list"></i>
+                </button>
 
-            <div className="mb-4">
+                <div className="ai-mobile-title">
+                    <span>AI Assistant</span>
+                    <small>
+                        {conversationId ? "Chat" : "New chat"}
+                    </small>
+                </div>
+
+                <button
+                    type="button"
+                    className="ai-mobile-icon-button"
+                    onClick={handleNewChat}
+                    disabled={loading}
+                    aria-label="Start new chat"
+                    title="New chat"
+                >
+                    <i className="bi bi-pencil-square"></i>
+                </button>
+            </div>
+
+            <button
+                type="button"
+                className={`ai-mobile-backdrop ${
+                    mobileMenuOpen ? "is-open" : ""
+                }`}
+                onClick={closeMobileMenu}
+                tabIndex={mobileMenuOpen ? 0 : -1}
+                aria-label="Close AI menu"
+            />
+
+            <aside
+                id="ai-mobile-menu"
+                className={`ai-mobile-drawer ${
+                    mobileMenuOpen ? "is-open" : ""
+                }`}
+                aria-hidden={!mobileMenuOpen}
+            >
+                <div className="ai-drawer-header">
+                    <div>
+                        <span className="ai-drawer-kicker">
+                            AI Assistant
+                        </span>
+                        <h2>Chats</h2>
+                    </div>
+
+                    <button
+                        type="button"
+                        className="ai-mobile-icon-button"
+                        onClick={closeMobileMenu}
+                        aria-label="Close AI menu"
+                    >
+                        <i className="bi bi-x-lg"></i>
+                    </button>
+                </div>
+
+                <div className="ai-drawer-body">
+                    {renderMenuContent(true)}
+                </div>
+
+                <button
+                    type="button"
+                    className="ai-drawer-logout"
+                    onClick={handleLogout}
+                >
+                    <i className="bi bi-box-arrow-right"></i>
+                    <span>Sign Out</span>
+                </button>
+            </aside>
+
+            <div className="ai-page-heading mb-4">
                 <h2 className="fw-bold mb-1">
                     AI Assistant
                 </h2>
@@ -355,288 +588,168 @@ const AI = () => {
                 </p>
             </div>
 
-            <div className="row g-4">
+            <div className="ai-layout">
+                <aside className="ai-desktop-sidebar">
+                    {renderMenuContent(false)}
+                </aside>
 
-                <div className="col-12 col-lg-3">
+                <section
+                    className="ai-chat-panel"
+                    aria-label="AI conversation"
+                >
+                    <header className="ai-chat-header">
+                        <div>
+                            <h4>How can I help you?</h4>
 
-                    <div className="card shadow-sm border-0">
-
-                        <div className="card-body">
-
-                            <div className="d-flex justify-content-between align-items-center mb-3">
-
-                                <h5 className="fw-bold mb-0">
-                                    Conversations
-                                </h5>
-
-                                <button
-                                    type="button"
-                                    className="btn btn-sm btn-primary"
-                                    onClick={handleNewChat}
-                                    disabled={loading}
-                                >
-                                    New
-                                </button>
-
-                            </div>
-
-                            {loadingConversations ? (
-                                <p className="text-muted mb-0">
-                                    Loading...
-                                </p>
-                            ) : conversations.length === 0 ? (
-                                <p className="text-muted mb-0">
-                                    No saved conversations yet.
-                                </p>
-                            ) : (
-                                <div className="d-flex flex-column gap-2">
-
-                                    {conversations.map(
-                                        (conversation) => (
-                                            <div
-                                                key={conversation.id}
-                                                className="d-flex gap-2"
-                                            >
-
-                                                <button
-                                                    type="button"
-                                                    className={`btn text-start flex-grow-1 ${conversation.id === conversationId
-                                                        ? "btn-primary"
-                                                        : "btn-outline-secondary"
-                                                        }`}
-                                                    onClick={() =>
-                                                        handleSelectConversation(
-                                                            conversation
-                                                        )
-                                                    }
-                                                    disabled={loading}
-                                                >
-                                                    {conversation.title}
-                                                </button>
-
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-outline-danger"
-                                                    onClick={() =>
-                                                        handleDeleteConversation(
-                                                            conversation.id
-                                                        )
-                                                    }
-                                                    disabled={loading}
-                                                    title="Delete conversation"
-                                                >
-                                                    <i className="bi bi-trash"></i>
-                                                </button>
-
-                                            </div>
-                                        )
-                                    )}
-
-                                </div>
-                            )}
-
+                            <p className="text-muted mb-0">
+                                Choose a suggestion or ask me
+                                anything.
+                            </p>
                         </div>
 
-                    </div>
+                        <button
+                            type="button"
+                            className="btn btn-outline-danger ai-desktop-signout"
+                            onClick={handleLogout}
+                        >
+                            Sign Out
+                        </button>
+                    </header>
 
-                </div>
+                    {messages.length === 0 && (
+                        <div className="ai-desktop-suggestions">
+                            {renderSuggestions()}
+                        </div>
+                    )}
 
-                <div className="col-12 col-lg-9">
-
-                    <div className="card shadow-sm border-0">
-
-                        <div className="card-body p-4">
-
-                            <div className="d-flex justify-content-between align-items-center mb-4">
-
-                                <div>
-                                    <h4 className="fw-bold mb-1">
-                                        How can I help you?
-                                    </h4>
-
-                                    <p className="text-muted mb-0">
-                                        Choose a suggestion or
-                                        ask me anything.
-                                    </p>
-                                </div>
-
-                                <button
-                                    type="button"
-                                    className="btn btn-outline-danger"
-                                    onClick={logout}
-                                >
-                                    Sign Out
-                                </button>
-
+                    <div className="ai-chat-window">
+                        {messages.length === 0 ? (
+                            <div className="ai-empty-chat">
+                                <i className="bi bi-stars"></i>
+                                <h3>Ask me anything</h3>
+                                <p>
+                                    Math, science, statistics,
+                                    and everyday questions.
+                                </p>
                             </div>
-
-                            {messages.length === 0 && (
-                                <div className="d-flex flex-wrap gap-2 mb-4">
-
-                                    {suggestions.map(
-                                        (suggestion) => (
-                                            <button
-                                                key={suggestion}
-                                                type="button"
-                                                className="btn btn-outline-primary"
-                                                onClick={() =>
-                                                    handleSuggestion(
-                                                        suggestion
-                                                    )
-                                                }
+                        ) : (
+                            <div className="ai-message-list">
+                                {messages.map((message) => (
+                                    <div
+                                        key={message.id}
+                                        className={`ai-message-row ${
+                                            message.role === "user"
+                                                ? "is-user"
+                                                : "is-assistant"
+                                        }`}
+                                    >
+                                        <div
+                                            className={
+                                                message.role === "user"
+                                                    ? "ai-message-bubble ai-message-user"
+                                                    : "ai-message-bubble ai-message-assistant"
+                                            }
+                                        >
+                                            <ReactMarkdown
+                                                remarkPlugins={[
+                                                    remarkMath,
+                                                ]}
+                                                rehypePlugins={[
+                                                    rehypeKatex,
+                                                ]}
                                             >
-                                                {suggestion}
-                                            </button>
-                                        )
-                                    )}
+                                                {message.content}
+                                            </ReactMarkdown>
+                                        </div>
 
-                                </div>
-                            )}
-
-                            <div
-                                className="border rounded p-4 mb-4"
-                                style={{
-                                    minHeight: "300px",
-                                    maxHeight: "500px",
-                                    overflowY: "auto",
-                                }}
-                            >
-
-                                {messages.length === 0 ? (
-                                    <div className="text-muted text-center">
-                                        Your AI conversation
-                                        will appear here.
+                                        <button
+                                            type="button"
+                                            className={`ai-copy-icon-button ${
+                                                message.role === "user"
+                                                    ? "is-user"
+                                                    : "is-assistant"
+                                            }`}
+                                            onClick={() =>
+                                                handleCopy(
+                                                    message.content,
+                                                    message.id
+                                                )
+                                            }
+                                            aria-label={
+                                                copiedMessageId ===
+                                                message.id
+                                                    ? "Message copied"
+                                                    : "Copy message"
+                                            }
+                                            title={
+                                                copiedMessageId ===
+                                                message.id
+                                                    ? "Copied"
+                                                    : "Copy"
+                                            }
+                                        >
+                                            <i
+                                                className={
+                                                    copiedMessageId ===
+                                                    message.id
+                                                        ? "bi bi-check2"
+                                                        : "bi bi-clipboard"
+                                                }
+                                            ></i>
+                                        </button>
                                     </div>
-                                ) : (
-                                    <div className="d-flex flex-column gap-3">
+                                ))}
 
-                                        {messages.map(
-                                            (message) => (
-                                                <div
-                                                    key={message.id}
-                                                    className={
-                                                        message.role ===
-                                                            "user"
-                                                            ? "text-end"
-                                                            : "text-start"
-                                                    }
-                                                >
-
-                                                    <div
-                                                        className={
-                                                            message.role === "user"
-                                                                ? "d-inline-block bg-primary text-white rounded p-3"
-                                                                : "d-inline-block bg-light rounded p-3"
-                                                        }
-                                                        style={{
-                                                            maxWidth: "85%",
-                                                            whiteSpace: "normal",
-                                                        }}
-                                                    >
-                                                        <ReactMarkdown
-                                                            remarkPlugins={[remarkMath]}
-                                                            rehypePlugins={[rehypeKatex]}
-                                                        >
-                                                            {message.content}
-                                                        </ReactMarkdown>
-
-                                                        <div className="mt-2 text-start">
-                                                            <button
-                                                                type="button"
-                                                                className={
-                                                                    message.role === "user"
-                                                                        ? "btn btn-sm btn-outline-light"
-                                                                        : "btn btn-sm btn-outline-secondary"
-                                                                }
-                                                                onClick={() =>
-                                                                    handleCopy(message.content, message.id)
-                                                                }
-                                                            >
-                                                                <i
-                                                                    className={
-                                                                        copiedMessageId === message.id
-                                                                            ? "bi bi-check2"
-                                                                            : "bi bi-clipboard"
-                                                                    }
-                                                                ></i>{" "}
-                                                                {copiedMessageId === message.id
-                                                                    ? "Copied"
-                                                                    : "Copy"}
-                                                            </button>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            )
-                                        )}
-
-                                        {loading && (
-                                            <div className="text-start">
-
-                                                <div className="d-inline-block bg-light rounded p-3 text-muted">
-                                                    Thinking...
-                                                </div>
-
-                                            </div>
-                                        )}
-
+                                {loading && (
+                                    <div className="ai-message-row is-assistant">
+                                        <div className="ai-message-bubble ai-message-assistant ai-message-loading">
+                                            Thinking...
+                                        </div>
                                     </div>
                                 )}
-
-                                <div ref={messagesEndRef} />
-
                             </div>
+                        )}
 
-                            {error && (
-                                <div
-                                    className="alert alert-danger"
-                                    role="alert"
-                                >
-                                    {error}
-                                </div>
-                            )}
-
-                            <form
-                                onSubmit={handleSubmit}
-                                className="d-flex gap-2"
-                            >
-
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    value={prompt}
-                                    onChange={(e) =>
-                                        setPrompt(
-                                            e.target.value
-                                        )
-                                    }
-                                    placeholder="Ask the AI anything..."
-                                    disabled={loading}
-                                />
-
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary"
-                                    disabled={
-                                        !prompt.trim() ||
-                                        loading
-                                    }
-                                >
-                                    {loading
-                                        ? "Sending..."
-                                        : "Send"}
-                                </button>
-
-                            </form>
-
-                        </div>
-
+                        <div ref={messagesEndRef} />
                     </div>
 
-                </div>
+                    {error && (
+                        <div
+                            className="alert alert-danger ai-chat-error"
+                            role="alert"
+                        >
+                            {error}
+                        </div>
+                    )}
 
+                    <form
+                        onSubmit={handleSubmit}
+                        className="ai-prompt-form"
+                    >
+                        <input
+                            type="text"
+                            className="form-control ai-prompt-input"
+                            value={prompt}
+                            onChange={(e) =>
+                                setPrompt(e.target.value)
+                            }
+                            placeholder="Ask the AI anything..."
+                            disabled={loading}
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-primary ai-send-button"
+                            disabled={!prompt.trim() || loading}
+                        >
+                            <span>
+                                {loading ? "Sending..." : "Send"}
+                            </span>
+                            <i className="bi bi-send-fill"></i>
+                        </button>
+                    </form>
+                </section>
             </div>
-
         </div>
     );
 };

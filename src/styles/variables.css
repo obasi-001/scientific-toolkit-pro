@@ -73,6 +73,106 @@ body {
     ) !important;
 }
 
+.auth-google-button {
+    --bs-btn-color: var(--text);
+    --bs-btn-bg: transparent;
+    --bs-btn-border-color: var(--border);
+    --bs-btn-hover-color: var(--text);
+    --bs-btn-hover-bg: color-mix(
+        in srgb,
+        var(--text) 8%,
+        transparent
+    );
+    --bs-btn-hover-border-color: var(--text);
+    --bs-btn-active-color: var(--text);
+    --bs-btn-active-bg: color-mix(
+        in srgb,
+        var(--text) 12%,
+        transparent
+    );
+    --bs-btn-active-border-color: var(--text);
+    --bs-btn-disabled-color: color-mix(
+        in srgb,
+        var(--text) 55%,
+        transparent
+    );
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: var(--border);
+}
+
+.ai-message-bubble {
+    max-width: 85%;
+    white-space: normal;
+}
+
+.ai-message-user {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.ai-message-user p,
+.ai-message-user li,
+.ai-message-user code,
+.ai-message-user pre {
+    color: #ffffff;
+}
+
+.ai-message-assistant {
+    background: color-mix(
+        in srgb,
+        var(--surface) 86%,
+        var(--background)
+    );
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.ai-message-assistant p,
+.ai-message-assistant li {
+    color: var(--text);
+}
+
+.ai-message-assistant p:last-child,
+.ai-message-user p:last-child {
+    margin-bottom: 0;
+}
+
+.ai-message-assistant a {
+    color: var(--secondary);
+}
+
+.ai-message-assistant code,
+.ai-message-assistant pre {
+    background: color-mix(
+        in srgb,
+        var(--background) 82%,
+        var(--surface)
+    );
+    color: var(--text);
+}
+
+.ai-message-assistant pre {
+    padding: 12px;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.ai-message-assistant .katex {
+    color: inherit;
+}
+
+.ai-message-user .katex {
+    color: inherit;
+}
+
+.ai-message-loading {
+    color: color-mix(
+        in srgb,
+        var(--text) 65%,
+        transparent
+    );
+}
+
 .settings-card {
     border: 1px solid var(--border);
     background: var(--surface);

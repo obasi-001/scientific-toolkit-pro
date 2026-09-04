@@ -14,11 +14,13 @@ const MOBILE_FIT_ROUTES = new Set([
     "/weather",
     "/translator",
     "/clock",
+    "/ai",
 ]);
  
 const MainLayout = ({ children }: MainLayoutProps) => { 
     const location = useLocation();
     const isCalculatorRoute = location.pathname === "/calculator";
+    const isAIRoute = location.pathname === "/ai";
     const isMobileFitRoute = MOBILE_FIT_ROUTES.has(location.pathname);
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(() => { 
@@ -90,7 +92,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
         <div
             className={`app ${isCalculatorRoute ? "app-calculator-mode" : ""} ${
                 isMobileFitRoute ? "app-mobile-fit-mode" : ""
-            }`}
+            } ${isAIRoute ? "app-ai-mode" : ""}`}
         >
             <Navbar
                 isSidebarOpen={isSidebarOpen}
@@ -115,7 +117,9 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                 <main
                     className={`dashboard ${
                         isCalculatorRoute ? "dashboard-calculator-mode" : ""
-                    } ${isMobileFitRoute ? "dashboard-mobile-fit-mode" : ""}`}
+                    } ${isMobileFitRoute ? "dashboard-mobile-fit-mode" : ""} ${
+                        isAIRoute ? "dashboard-ai-mode" : ""
+                    }`}
                 >
                     {children} 
                 </main> 
