@@ -3,6 +3,7 @@ import { auth } from "../services/firebase";
 
 
 import {
+    useCallback,
     createContext,
     useContext,
     useEffect,
@@ -47,18 +48,6 @@ const getAuthErrorCode = (error: unknown): string => {
     return "";
 };
 
-const shouldUseRedirectForGoogleSignIn = () => {
-    if (typeof navigator === "undefined") {
-        return false;
-    }
-
-    const userAgent = navigator.userAgent;
-
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|FBAN|FBAV|Instagram|Line|TikTok|Snapchat/i.test(
-        userAgent
-    );
-};
-
 const shouldFallbackToRedirect = (
     error: unknown
 ) => {
@@ -99,6 +88,19 @@ const AuthContext = createContext<
     AuthContextType | undefined
 >(undefined);
 
+const initializeAIUser = async (
+    currentUser: User
+) => {
+    try {
+        await createAIUserIfNeeded(currentUser);
+    } catch (error) {
+        console.error(
+            "Unable to initialize AI user:",
+            error
+        );
+    }
+};
+
 interface AuthProviderProps {
     children: ReactNode;
 }
@@ -109,33 +111,27 @@ export const AuthProvider = ({
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        let isActive = true;
-
-        const initializeAIUser = async (
-            currentUser: User
-        ) => {
-            try {
-                await createAIUserIfNeeded(currentUser);
-            } catch (error) {
-                console.error(
-                    "Unable to initialize AI user:",
-                    error
-                );
-            }
-        };
-
-        const updateAuthUser = (currentUser: User | null) => {
-            if (!isActive) {
-                return;
-            }
-
+    const syncAuthUser = useCallback(
+        (currentUser: User | null) => {
             setUser(currentUser);
             setLoading(false);
 
             if (currentUser) {
                 void initializeAIUser(currentUser);
             }
+        },
+        []
+    );
+
+    useEffect(() => {
+        let isActive = true;
+
+        const updateAuthUser = (currentUser: User | null) => {
+            if (!isActive) {
+                return;
+            }
+
+            syncAuthUser(currentUser);
         };
 
         const unsubscribe = onAuthStateChanged(
@@ -163,18 +159,14 @@ export const AuthProvider = ({
             isActive = false;
             unsubscribe();
         };
-    }, []);
+    }, [syncAuthUser]);
 
     const loginWithGoogle = async () => {
         const provider = createGoogleProvider();
 
-        if (shouldUseRedirectForGoogleSignIn()) {
-            await signInWithRedirect(auth, provider);
-            return;
-        }
-
         try {
-            await signInWithPopup(auth, provider);
+            const result = await signInWithPopup(auth, provider);
+            syncAuthUser(result.user);
         } catch (error) {
             if (shouldFallbackToRedirect(error)) {
                 await signInWithRedirect(auth, provider);
