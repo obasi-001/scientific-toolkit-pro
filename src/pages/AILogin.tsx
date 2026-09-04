@@ -74,7 +74,7 @@ const AILogin = () => {
             setLoading(true);
             setError("");
 
-            const signedInUser = await loginWithGoogle("/ai");
+            const signedInUser = await loginWithGoogle();
 
             if (signedInUser) {
                 navigate("/ai", { replace: true });

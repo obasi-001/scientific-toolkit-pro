@@ -70,9 +70,7 @@ const Login = () => {
             setLoading(true);
             setError("");
 
-            const signedInUser = await loginWithGoogle(
-                "/dashboard"
-            );
+            const signedInUser = await loginWithGoogle();
 
             if (signedInUser) {
                 navigate("/dashboard", { replace: true });
