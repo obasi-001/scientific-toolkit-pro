@@ -17,9 +17,59 @@ import {
     sendPasswordResetEmail,
     signInWithEmailAndPassword,
     signInWithPopup,
+    signInWithRedirect,
     signOut,
     type User,
 } from "firebase/auth";
+
+const createGoogleProvider = () => {
+    const provider = new GoogleAuthProvider();
+
+    provider.setCustomParameters({
+        prompt: "select_account",
+    });
+
+    return provider;
+};
+
+const getAuthErrorCode = (error: unknown): string => {
+    if (
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error
+    ) {
+        return String(
+            (error as { code?: unknown }).code
+        );
+    }
+
+    return "";
+};
+
+const shouldUseRedirectForGoogleSignIn = () => {
+    if (typeof navigator === "undefined") {
+        return false;
+    }
+
+    const userAgent = navigator.userAgent;
+
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|FBAN|FBAV|Instagram|Line|TikTok|Snapchat/i.test(
+        userAgent
+    );
+};
+
+const shouldFallbackToRedirect = (
+    error: unknown
+) => {
+    const code = getAuthErrorCode(error);
+
+    return (
+        code === "auth/popup-blocked" ||
+        code === "auth/cancelled-popup-request" ||
+        code ===
+            "auth/operation-not-supported-in-this-environment"
+    );
+};
 
 
 interface AuthContextType {
@@ -87,9 +137,23 @@ export const AuthProvider = ({
     }, []);
 
     const loginWithGoogle = async () => {
-        const provider = new GoogleAuthProvider();
+        const provider = createGoogleProvider();
 
-        await signInWithPopup(auth, provider);
+        if (shouldUseRedirectForGoogleSignIn()) {
+            await signInWithRedirect(auth, provider);
+            return;
+        }
+
+        try {
+            await signInWithPopup(auth, provider);
+        } catch (error) {
+            if (shouldFallbackToRedirect(error)) {
+                await signInWithRedirect(auth, provider);
+                return;
+            }
+
+            throw error;
+        }
     };
 
     const login = async (

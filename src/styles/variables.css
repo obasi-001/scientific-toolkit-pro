@@ -100,6 +100,12 @@ body {
     --bs-btn-disabled-border-color: var(--border);
 }
 
+.auth-error-message {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
 .ai-message-bubble {
     max-width: 85%;
     white-space: normal;

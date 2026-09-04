@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { getAuthErrorMessage } from "../utils/errorMessages";
 
 const AILogin = () => {
     const navigate = useNavigate();
@@ -8,6 +9,7 @@ const AILogin = () => {
     const {
         login,
         loginWithGoogle,
+        user,
     } = useAuth();
 
     const [email, setEmail] = useState("");
@@ -15,6 +17,13 @@ const AILogin = () => {
 
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const googleLoginInFlightRef = useRef(false);
+
+    useEffect(() => {
+        if (user) {
+            navigate("/ai", { replace: true });
+        }
+    }, [navigate, user]);
 
     const handleLogin = async (
         e: React.FormEvent
@@ -39,10 +48,13 @@ const AILogin = () => {
 
             navigate("/ai");
         } catch (err) {
+            console.error("AI sign-in failed:", err);
+
             setError(
-                err instanceof Error
-                    ? err.message
-                    : "Unable to sign in."
+                getAuthErrorMessage(
+                    err,
+                    "Unable to sign in."
+                )
             );
         } finally {
             setLoading(false);
@@ -50,6 +62,12 @@ const AILogin = () => {
     };
 
     const handleGoogleLogin = async () => {
+        if (loading || googleLoginInFlightRef.current) {
+            return;
+        }
+
+        googleLoginInFlightRef.current = true;
+
         try {
             setLoading(true);
             setError("");
@@ -58,12 +76,13 @@ const AILogin = () => {
 
             navigate("/ai");
         } catch (err) {
+            console.error("Google AI sign-in failed:", err);
+
             setError(
-                err instanceof Error
-                    ? err.message
-                    : "Unable to sign in with Google."
+                getAuthErrorMessage(err)
             );
         } finally {
+            googleLoginInFlightRef.current = false;
             setLoading(false);
         }
     };
@@ -100,7 +119,7 @@ const AILogin = () => {
                             </div>
 
                             {error && (
-                                <div className="alert alert-danger">
+                                <div className="alert alert-danger auth-error-message">
                                     {error}
                                 </div>
                             )}

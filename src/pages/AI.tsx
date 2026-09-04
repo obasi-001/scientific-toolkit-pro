@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { generateAIResponse } from "../services/aiService";
+import { getAIErrorMessage } from "../utils/errorMessages";
 
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
@@ -300,9 +301,7 @@ const AI = () => {
             );
 
             setError(
-                err instanceof Error
-                    ? err.message
-                    : "Something went wrong while contacting the AI."
+                getAIErrorMessage(err)
             );
         } finally {
             setLoading(false);
