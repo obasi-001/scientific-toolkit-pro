@@ -49,8 +49,12 @@ const Footer = () => {
                         </strong>
 
                         <span>
-                            &copy; {year} Okwi Intl. All rights reserved.
+                            &copy; {year} Scientific Toolkit Pro. All rights reserved.
                         </span>
+
+                        <p>
+                            Developed by Okwi Int'l Tech
+                        </p>
                     </div>
                 </div>
 
