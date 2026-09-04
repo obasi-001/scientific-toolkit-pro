@@ -4,7 +4,7 @@ type ErrorWithCode = {
 };
 
 const GOOGLE_POPUP_ERROR_MESSAGE =
-    "Google sign-in did not finish. Tap Continue with Google again, or create an account below to continue.";
+    "Unable to sign in. Please try again. If you're using Google, wait a few seconds and retry, or use your email and password instead. Don't have an account? Create an account below to continue.";
 
 const getErrorCode = (error: unknown): string => {
     if (
@@ -36,7 +36,7 @@ const getErrorText = (error: unknown): string => {
 
 export const getAuthErrorMessage = (
     error: unknown,
-    fallback = "Unable to sign in. Try again or create an account below to continue."
+    fallback = GOOGLE_POPUP_ERROR_MESSAGE
 ): string => {
     const code = getErrorCode(error);
 
