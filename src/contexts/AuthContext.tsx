@@ -34,6 +34,9 @@ const createGoogleProvider = () => {
     return provider;
 };
 
+const GOOGLE_SIGN_IN_TARGET_KEY =
+    "scientific-toolkit-google-sign-in-target";
+
 const getAuthErrorCode = (error: unknown): string => {
     if (
         typeof error === "object" &&
@@ -48,6 +51,16 @@ const getAuthErrorCode = (error: unknown): string => {
     return "";
 };
 
+const isLikelyMobileBrowser = () => {
+    if (typeof navigator === "undefined") {
+        return false;
+    }
+
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|FBAN|FBAV|Instagram|Line|TikTok|Snapchat/i.test(
+        navigator.userAgent
+    );
+};
+
 const shouldFallbackToRedirect = (
     error: unknown
 ) => {
@@ -57,15 +70,104 @@ const shouldFallbackToRedirect = (
         code === "auth/popup-blocked" ||
         code === "auth/cancelled-popup-request" ||
         code ===
-            "auth/operation-not-supported-in-this-environment"
+            "auth/operation-not-supported-in-this-environment" ||
+        (
+            code === "auth/popup-closed-by-user" &&
+            isLikelyMobileBrowser()
+        )
     );
+};
+
+const isSafeInternalPath = (path: string) =>
+    path.startsWith("/") && !path.startsWith("//");
+
+const setPendingGoogleSignInTarget = (path: string) => {
+    if (
+        typeof window === "undefined" ||
+        !isSafeInternalPath(path)
+    ) {
+        return;
+    }
+
+    try {
+        window.sessionStorage.setItem(
+            GOOGLE_SIGN_IN_TARGET_KEY,
+            path
+        );
+    } catch (error) {
+        console.error(
+            "Unable to remember Google sign-in target:",
+            error
+        );
+    }
+};
+
+const getPendingGoogleSignInTarget = () => {
+    if (typeof window === "undefined") {
+        return "";
+    }
+
+    try {
+        return (
+            window.sessionStorage.getItem(
+                GOOGLE_SIGN_IN_TARGET_KEY
+            ) ?? ""
+        );
+    } catch (error) {
+        console.error(
+            "Unable to read Google sign-in target:",
+            error
+        );
+        return "";
+    }
+};
+
+const clearPendingGoogleSignInTarget = () => {
+    if (typeof window === "undefined") {
+        return;
+    }
+
+    try {
+        window.sessionStorage.removeItem(
+            GOOGLE_SIGN_IN_TARGET_KEY
+        );
+    } catch (error) {
+        console.error(
+            "Unable to clear Google sign-in target:",
+            error
+        );
+    }
+};
+
+const redirectToPendingGoogleSignInTarget = (
+    currentUser: User | null
+) => {
+    if (!currentUser || typeof window === "undefined") {
+        return;
+    }
+
+    const targetPath = getPendingGoogleSignInTarget();
+
+    if (!targetPath || !isSafeInternalPath(targetPath)) {
+        return;
+    }
+
+    clearPendingGoogleSignInTarget();
+
+    if (
+        window.location.pathname !== targetPath
+    ) {
+        window.location.replace(targetPath);
+    }
 };
 
 
 interface AuthContextType {
     user: User | null;
     loading: boolean;
-    loginWithGoogle: () => Promise<void>;
+    loginWithGoogle: (
+        redirectPath?: string
+    ) => Promise<User | null>;
 
     login: (
         email: string,
@@ -87,6 +189,19 @@ interface AuthContextType {
 const AuthContext = createContext<
     AuthContextType | undefined
 >(undefined);
+
+let redirectResultPromise: Promise<User | null> | null =
+    null;
+
+const getGoogleRedirectUser = () => {
+    if (!redirectResultPromise) {
+        redirectResultPromise = getRedirectResult(auth).then(
+            (result) => result?.user ?? null
+        );
+    }
+
+    return redirectResultPromise;
+};
 
 const initializeAIUser = async (
     currentUser: User
@@ -115,6 +230,7 @@ export const AuthProvider = ({
         (currentUser: User | null) => {
             setUser(currentUser);
             setLoading(false);
+            redirectToPendingGoogleSignInTarget(currentUser);
 
             if (currentUser) {
                 void initializeAIUser(currentUser);
@@ -139,10 +255,10 @@ export const AuthProvider = ({
             updateAuthUser
         );
 
-        void getRedirectResult(auth)
-            .then((result) => {
-                if (result?.user) {
-                    updateAuthUser(result.user);
+        void getGoogleRedirectUser()
+            .then((redirectUser) => {
+                if (redirectUser) {
+                    updateAuthUser(redirectUser);
                 }
             })
             .catch((error) => {
@@ -161,18 +277,30 @@ export const AuthProvider = ({
         };
     }, [syncAuthUser]);
 
-    const loginWithGoogle = async () => {
+    const loginWithGoogle = async (
+        redirectPath = "/ai"
+    ) => {
         const provider = createGoogleProvider();
+
+        setPendingGoogleSignInTarget(redirectPath);
+
+        if (isLikelyMobileBrowser()) {
+            await signInWithRedirect(auth, provider);
+            return null;
+        }
 
         try {
             const result = await signInWithPopup(auth, provider);
+            clearPendingGoogleSignInTarget();
             syncAuthUser(result.user);
+            return result.user;
         } catch (error) {
             if (shouldFallbackToRedirect(error)) {
                 await signInWithRedirect(auth, provider);
-                return;
+                return null;
             }
 
+            clearPendingGoogleSignInTarget();
             throw error;
         }
     };

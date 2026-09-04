@@ -9,10 +9,33 @@ import {
 
 import { getAI, GoogleAIBackend } from "firebase/ai";
 
+const getFirebaseAuthDomain = () => {
+    const configuredAuthDomain =
+        import.meta.env.VITE_FIREBASE_AUTH_DOMAIN;
+
+    if (typeof window === "undefined") {
+        return configuredAuthDomain;
+    }
+
+    const { hostname } = window.location;
+    const isLocalHost =
+        hostname === "localhost" ||
+        hostname === "127.0.0.1" ||
+        hostname === "::1";
+    const isLocalNetworkIp =
+        /^(\d{1,3}\.){3}\d{1,3}$/.test(hostname);
+
+    if (isLocalHost || isLocalNetworkIp) {
+        return configuredAuthDomain;
+    }
+
+    return hostname;
+};
+
 // Firebase configuration
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    authDomain: getFirebaseAuthDomain(),
     projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
     storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
     messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,

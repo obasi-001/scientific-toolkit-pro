@@ -70,9 +70,13 @@ const Login = () => {
             setLoading(true);
             setError("");
 
-            await loginWithGoogle();
+            const signedInUser = await loginWithGoogle(
+                "/dashboard"
+            );
 
-            navigate("/dashboard");
+            if (signedInUser) {
+                navigate("/dashboard", { replace: true });
+            }
         } catch (err) {
             console.error("Google sign-in failed:", err);
 

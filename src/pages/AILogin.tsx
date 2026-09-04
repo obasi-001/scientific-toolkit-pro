@@ -74,9 +74,11 @@ const AILogin = () => {
             setLoading(true);
             setError("");
 
-            await loginWithGoogle();
+            const signedInUser = await loginWithGoogle("/ai");
 
-            navigate("/ai");
+            if (signedInUser) {
+                navigate("/ai", { replace: true });
+            }
         } catch (err) {
             console.error("Google AI sign-in failed:", err);
 
