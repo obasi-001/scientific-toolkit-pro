@@ -36,15 +36,14 @@ const Footer = () => {
         <footer className="dashboard-footer">
             <div className="dashboard-footer-inner">
                 <div className="dashboard-footer-brand">
-                    <span
-                        className="dashboard-footer-mark"
-                        aria-hidden="true"
-                    >
-                        <FaCalculator />
-                    </span>
-
                     <div className="dashboard-footer-copy">
-                        <strong>
+                        <strong className="dashboard-footer-title">
+                            <span
+                                className="dashboard-footer-mark"
+                                aria-hidden="true"
+                            >
+                                <FaCalculator />
+                            </span>
                             Scientific Toolkit Pro
                         </strong>
 

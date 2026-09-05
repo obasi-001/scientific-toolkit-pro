@@ -8,15 +8,13 @@
         clamp(18px, 3vw, 28px)
         clamp(18px, 4vw, 32px)
         max(clamp(18px, 3vw, 28px), env(safe-area-inset-bottom));
-    border: 1px solid #d8e0ec;
-    border-radius: 8px;
-    background: #e8edf5;
+    border-top: 1px solid #d8e0ec;
+    background: transparent;
     color: var(--text);
 }
 
 [data-theme="dark"] .dashboard-footer {
-    border-color: #1e293b;
-    background: #020617;
+    border-top-color: #1e293b;
 }
 
 .dashboard-footer-inner {
@@ -38,51 +36,55 @@
 }
 
 .dashboard-footer-mark {
-    width: 42px;
-    height: 42px;
-    flex: 0 0 42px;
+    flex: 0 0 auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid color-mix(in srgb, var(--primary) 30%, var(--border));
-    border-radius: 8px;
-    background: color-mix(in srgb, var(--primary) 12%, var(--surface));
     color: var(--primary);
+    font-size: 1em;
+    line-height: 1;
 }
 
-[data-theme="dark"] .dashboard-footer-mark {
-    background: color-mix(in srgb, var(--primary) 18%, #020617);
+.dashboard-footer-mark svg {
+    display: block;
 }
 
 .dashboard-footer-copy {
     min-width: 0;
 }
 
-.dashboard-footer-copy strong,
-.dashboard-footer-copy span,
-.dashboard-footer-copy p {
+.dashboard-footer-copy > strong,
+.dashboard-footer-copy > span,
+.dashboard-footer-copy > p {
     display: block;
     max-width: 100%;
     overflow-wrap: anywhere;
 }
 
-.dashboard-footer-copy strong {
+.dashboard-footer-copy > strong {
     font-size: 1rem;
     line-height: 1.2;
 }
 
-.dashboard-footer-copy span,
-.dashboard-footer-copy p {
+.dashboard-footer-copy .dashboard-footer-title {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.dashboard-footer-copy > span,
+.dashboard-footer-copy > p {
     color: color-mix(in srgb, var(--text) 68%, transparent);
     font-size: 0.86rem;
     line-height: 1.45;
 }
 
-.dashboard-footer-copy span {
+.dashboard-footer-copy > span {
     margin-top: 4px;
 }
 
-.dashboard-footer-copy p {
+.dashboard-footer-copy > p {
     margin: 2px 0 0;
 }
 
@@ -161,22 +163,15 @@
     }
 
     .dashboard-footer-brand {
-        flex-direction: column;
-        gap: 10px;
+        gap: 8px;
     }
 
-    .dashboard-footer-mark {
-        width: 38px;
-        height: 38px;
-        flex-basis: 38px;
-    }
-
-    .dashboard-footer-copy strong {
+    .dashboard-footer-copy > strong {
         font-size: 0.96rem;
     }
 
-    .dashboard-footer-copy span,
-    .dashboard-footer-copy p {
+    .dashboard-footer-copy > span,
+    .dashboard-footer-copy > p {
         font-size: 0.82rem;
     }
 

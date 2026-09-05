@@ -46,11 +46,11 @@ const AI = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const suggestions = [
-        "Explain a calculation",
-        "Solve a math problem",
-        "Explain this formula",
+        "Help with coding",
+        "Help with schoolwork",
+        "Help me write",
         "Help me with statistics",
-        "Explain a scientific concept",
+        "Solve a problem",
         "Ask anything",
     ];
 
