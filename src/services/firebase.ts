@@ -36,7 +36,7 @@ if (import.meta.env.DEV) {
             FIREBASE_APPCHECK_DEBUG_TOKEN?: string | boolean;
         }
     ).FIREBASE_APPCHECK_DEBUG_TOKEN =
-        import.meta.env.FIREBASE_APPCHECK_DEBUG_TOKEN;
+        import.meta.env.VITE_FIREBASE_APPCHECK_DEBUG_TOKEN;
 }
 
 export const appCheck = initializeAppCheck(app, {

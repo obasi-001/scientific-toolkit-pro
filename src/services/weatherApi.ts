@@ -1,22 +1,14 @@
 import type { WeatherData } from "../types/weather";
 
-const API_KEY = import.meta.env.WEATHER_API_KEY;
-
-const BASE_URL = "https://api.weatherapi.com/v1/current.json";
-
 export const getWeather = async (
   city: string
 ): Promise<WeatherData> => {
-  if (!API_KEY) {
-    throw new Error("Weather API key is missing.");
-  }
-
   if (!city.trim()) {
     throw new Error("Please enter a city.");
   }
 
   const response = await fetch(
-    `${BASE_URL}?key=${API_KEY}&q=${encodeURIComponent(city)}&aqi=no`
+    `/api/weather?city=${encodeURIComponent(city)}`
   );
 
   if (!response.ok) {
